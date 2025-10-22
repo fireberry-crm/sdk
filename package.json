@@ -1,0 +1,71 @@
+{
+  "name": "@fireberry/sdk",
+  "version": "0.0.5",
+  "description": "Fireberry SDK",
+  "type": "module",
+  "sideEffects": false,
+  "scripts": {
+    "prepare": "npm run build",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": " tsc --noEmit && eslint \"src/**/*.ts\"",
+    "build": "npm run clean && npm run build:esm && npm run build:cjs",
+    "dev:cjs": "tsc -p tsconfig.cjs.json --watch",
+    "dev:esm": "tsc -p tsconfig.json --watch",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.json",
+    "test": "jest --watchAll",
+    "clean": "rm -rf dist"
+  },
+  "exports": {
+    "./client": {
+      "import": {
+        "types": "./dist/esm/fireberrySDK.client.d.ts",
+        "default": "./dist/esm/fireberrySDK.client.js"
+      },
+      "require": {
+        "types": "./dist/cjs/fireberrySDK.client.d.ts",
+        "default": "./dist/cjs/fireberrySDK.client.js"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "bundleDependencies": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fireberry-crm/sdk.git"
+  },
+  "maintainers": [
+    {
+      "name": "Johnny Marelly",
+      "email": "johnnym@fireberry.com"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Itay Zemah",
+      "email": "itay@fireberry.com"
+    },
+    {
+      "name": "Johnny Marelly",
+      "email": "johnnym@fireberry.com"
+    }
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.12.8",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@typescript-eslint/parser": "^8.46.2",
+    "eslint": "^9.38.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.4.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5"
+  },
+  "keywords": [
+    "fireberry",
+    "sdk"
+  ]
+}

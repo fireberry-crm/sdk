@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["ES2017", "DOM"],
+    "module": "ESNext",
+    "rootDir": "src",
+    "outDir": "./dist/esm",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "removeComments": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "baseUrl": "./",
+    "paths": {
+      "*": ["*"]
+    },
+    "typeRoots": ["@types", "./node_modules/@types"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

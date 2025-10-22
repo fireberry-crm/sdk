@@ -1,0 +1,128 @@
+import { MESSAGE_TYPES, REQUEST_ACTIONS } from './constants';
+import { Context } from './context';
+import { IframeMessageManager } from './iframeMessageManager';
+import type {
+  API,
+  Payload,
+  QueryPayload,
+  RecordDetails,
+  Response,
+  ResponseData,
+  ResponseError,
+  UserDetails,
+} from './types';
+
+export class FireberryClientSDK<TData extends Response> extends IframeMessageManager<TData> {
+  private _context: Context | null = null;
+  constructor() {
+    super();
+  }
+
+  get api(): API<TData> {
+    return {
+      query: this.query.bind(this),
+      create: this.create.bind(this),
+      delete: this.delete.bind(this),
+      update: this.update.bind(this),
+    };
+  }
+
+  get context(): Context | null {
+    return this._context;
+  }
+  /**
+   * @param this - see what `this` argument means here https://www.typescriptlang.org/docs/handbook/2/classes.html#this-parameters
+   */
+  async initializeContext<T extends TData>(
+    this: FireberryClientSDK<T>
+  ): Promise<FireberryClientSDK<T>> {
+    if (this.context) {
+      return this;
+    }
+
+    const response = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST_CONTEXT,
+    });
+
+    const { status, data, statusText } = (response?.error as ResponseError) ?? {};
+
+    if (status && status !== 200) {
+      throw new Error(data?.Message ?? statusText);
+    }
+
+    const { recordId, objectType, userInfo } =
+      (response.data as T & {
+        recordId: RecordDetails['id'];
+        objectType: RecordDetails['type'];
+        userInfo: UserDetails;
+      }) ?? {};
+
+    this.setContext(
+      new Context({
+        record: { id: recordId, type: objectType },
+        user: { fullName: userInfo.fullName, id: userInfo.id },
+      })
+    );
+
+    return this;
+  }
+
+  private setContext(context: Context): void {
+    this._context = context;
+  }
+
+  private query(objectType: string | number, payload: QueryPayload): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.QUERY,
+      objecttype: objectType,
+      ...payload,
+    });
+  }
+
+  private create<T extends Payload>(
+    objectType: string | number,
+    payload: T
+  ): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.CREATE,
+      objectType,
+      ...payload,
+    });
+  }
+
+  private delete(objectType: string | number, recordId: string): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.DELETE,
+      objectType,
+      recordId,
+    });
+  }
+
+  private update<T extends Payload>(
+    objectType: string | number,
+    recordId: string,
+    payload: T
+  ): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.UPDATE,
+      objectType,
+      recordId,
+      ...payload,
+    });
+  }
+}
+
+export type {
+  BusinessObject,
+  Data,
+  Payload,
+  QueryPayload,
+  ResponseData,
+  ResponseError,
+} from './types';
+
+export default FireberryClientSDK;
