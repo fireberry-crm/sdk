@@ -9,6 +9,8 @@ export const REQUEST_ACTIONS = {
   DELETE: 'DELETE',
   UPDATE: 'UPDATE',
   QUERY: 'QUERY',
+  SHOW_BADGE: 'SHOW_BADGE',
+  HIDE_BADGE: 'HIDE_BADGE',
 } as const;
 
 export const TIMEOUT_DURATION = 60000; // one minute;

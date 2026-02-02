@@ -3,6 +3,7 @@ import { Context } from './context';
 import { IframeMessageManager } from './iframeMessageManager';
 import type {
   API,
+  BadgePayload,
   Payload,
   QueryPayload,
   RecordDetails,
@@ -25,6 +26,15 @@ export class FireberryClientSDK<TData extends Response> extends IframeMessageMan
       delete: this.delete.bind(this),
       update: this.update.bind(this),
     };
+  }
+
+  get system() {
+     return {
+      badge:{
+        show: this.showBadge.bind(this),
+        hide: this.hideBadge.bind(this),
+      }
+     }
   }
 
   get context(): Context | null {
@@ -65,6 +75,21 @@ export class FireberryClientSDK<TData extends Response> extends IframeMessageMan
     );
 
     return this;
+  }
+
+  private showBadge(payload: BadgePayload): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.SHOW_BADGE,
+      ...payload,
+    });
+  }
+
+  private hideBadge(): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.HIDE_BADGE,
+    });
   }
 
   private setContext(context: Context): void {
@@ -122,7 +147,7 @@ export type {
   Payload,
   QueryPayload,
   ResponseData,
-  ResponseError,
+  ResponseError
 } from './types';
 
 export default FireberryClientSDK;
