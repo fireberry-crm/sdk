@@ -3,6 +3,7 @@ import { Context } from './context';
 import { IframeMessageManager } from './iframeMessageManager';
 import type {
   API,
+  CallbarPayload,
   Payload,
   QueryPayload,
   RecordDetails,
@@ -30,6 +31,16 @@ export class FireberryClientSDK<TData extends Response> extends IframeMessageMan
   get context(): Context | null {
     return this._context;
   }
+
+  get system() {
+    return {
+      callbar: {
+        show: this.showCallbar.bind(this),
+        hide: this.hideCallbar.bind(this),
+      },
+    };
+  }
+
   /**
    * @param this - see what `this` argument means here https://www.typescriptlang.org/docs/handbook/2/classes.html#this-parameters
    */
@@ -69,6 +80,21 @@ export class FireberryClientSDK<TData extends Response> extends IframeMessageMan
 
   private setContext(context: Context): void {
     this._context = context;
+  }
+
+  private showCallbar(payload: CallbarPayload): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.SHOW_CALLBAR,
+      ...payload,
+    });
+  }
+
+  private hideCallbar(): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.HIDE_CALLBAR,
+    });
   }
 
   private query(objectType: string | number, payload: QueryPayload): Promise<ResponseData<TData>> {
