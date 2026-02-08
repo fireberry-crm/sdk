@@ -73,6 +73,21 @@ export type BadgePayload = {
   badgeType: BadgeType;
 };
 
+export type CallbarPayload = {
+  callInfo: {
+    number: number;
+    status: 'Talking' | 'Ringing' | 'Missed' | 'Dialing';
+  };
+  objectConfig: {
+    objectType: string;
+    fields: {
+      name: string;
+      order?: number;
+    }[];
+  }[];
+  placemment: 'bottom-start' | 'bottom-end';
+};
+
 export interface API<TData extends Response> {
   query: (objectType: string | number, payload: QueryPayload) => Promise<ResponseData<TData>>;
   create: <T extends Payload>(
