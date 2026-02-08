@@ -66,6 +66,13 @@ export type QueryPayload = {
   page_number?: number;
 };
 
+export type BadgeType = 'success' | 'warning' | 'error' | 'info';
+
+export type BadgePayload = {
+  number: number;
+  badgeType: BadgeType;
+};
+
 export type CallbarPayload = {
   callInfo: {
     number: number;
