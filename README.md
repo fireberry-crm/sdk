@@ -66,6 +66,60 @@ const updatedRecord = await api.update(objectType, 'recordId123', {
 const deleteRecord = await api.delete(objectType, 'recordId123');
 ```
 
+### System Methods
+
+Control UI elements in the Fireberry platform using the system API.
+
+#### Badge Notifications
+
+Display notification badges to alert users about important information or status updates.
+
+```typescript
+// Show a badge with a number and type
+await client.system.badge.show({
+  number: 5,
+  badgeType: 'info', // 'success' | 'warning' | 'error' | 'info'
+});
+
+// Hide the badge
+await client.system.badge.hide();
+```
+
+**Badge Types:**
+
+- `success` — Green badge for positive notifications
+- `warning` — Yellow badge for warnings
+- `error` — Red badge for errors or critical alerts
+- `info` — Blue badge for informational messages
+
+#### Callbar
+
+Display a callbar interface with call information and related records.
+
+```typescript
+// Show callbar with call information
+await client.system.callbar.show({
+  callInfo: {
+    number: 1234567890,
+    status: 'Talking' // 'Talking' | 'Ringing' | 'Missed' | 'Dialing'
+  },
+  objectConfig: [
+    {
+      objectType: '1',
+      order: 1
+      fields: [
+        { name: 'accountname' },
+        { name: 'email' }
+      ]
+    }
+  ],
+  placemment: 'bottom-end' // 'bottom-start' | 'bottom-end'
+});
+
+// Hide the callbar
+await client.system.callbar.hide();
+```
+
 ## Browser Support
 
 - Modern browsers with ES6+ support
