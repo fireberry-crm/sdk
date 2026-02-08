@@ -80,9 +80,9 @@ export type CallbarPayload = {
   };
   objectConfig: {
     objectType: string;
+    order?: number;
     fields: {
       name: string;
-      order?: number;
     }[];
   }[];
   placemment: 'bottom-start' | 'bottom-end';
