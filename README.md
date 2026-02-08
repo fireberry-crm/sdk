@@ -101,19 +101,16 @@ Display a callbar interface with call information and related records.
 await client.system.callbar.show({
   callInfo: {
     number: 1234567890,
-    status: 'Talking' // 'Talking' | 'Ringing' | 'Missed' | 'Dialing'
+    status: 'Talking', // 'Talking' | 'Ringing' | 'Missed' | 'Dialing'
   },
   objectConfig: [
     {
       objectType: '1',
-      order: 1
-      fields: [
-        { name: 'accountname' },
-        { name: 'email' }
-      ]
-    }
+      order: 1,
+      fields: [{ name: 'accountname' }, { name: 'email' }],
+    },
   ],
-  placemment: 'bottom-end' // 'bottom-start' | 'bottom-end'
+  placemment: 'bottom-end', // 'bottom-start' | 'bottom-end'
 });
 
 // Hide the callbar
