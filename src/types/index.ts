@@ -66,13 +66,11 @@ export type QueryPayload = {
   page_number?: number;
 };
 
-export type BadgePlacement = 'top-start' | 'top-end';
 export type BadgeType = 'success' | 'warning' | 'error' | 'info';
 
 export type BadgePayload = {
   number: number;
   badgeType: BadgeType;
-  placement?: BadgePlacement;
 };
 
 export interface API<TData extends Response> {
