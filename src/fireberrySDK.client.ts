@@ -47,7 +47,13 @@ export class FireberryClientSDK<TData extends Response> extends IframeMessageMan
     const { status, data, statusText } = (response?.error as ResponseError) ?? {};
 
     if (status && status !== 200) {
-      throw new Error(data?.Message ?? statusText);
+      const errorMessage = data?.Message ?? statusText;
+      this.logError('Context initialization failed', {
+        status,
+        message: errorMessage,
+        data,
+      });
+      throw new Error(errorMessage);
     }
 
     const { recordId, objectType, userInfo } =
