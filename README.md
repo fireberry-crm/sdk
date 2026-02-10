@@ -110,7 +110,7 @@ await client.system.callbar.show({
       fields: [{ name: 'accountname' }, { name: 'email' }],
     },
   ],
-  placemment: 'bottom-end', // 'bottom-start' | 'bottom-end'
+  placement: 'bottom-end', // 'bottom-start' | 'bottom-end'
 });
 
 // Hide the callbar

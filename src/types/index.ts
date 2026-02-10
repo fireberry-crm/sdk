@@ -85,7 +85,7 @@ export type CallbarPayload = {
       name: string;
     }[];
   }[];
-  placemment: 'bottom-start' | 'bottom-end';
+  placement: 'bottom-start' | 'bottom-end';
 };
 
 export interface API<TData extends Response> {
