@@ -1,6 +1,6 @@
 {
   "name": "@fireberry/sdk",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Fireberry SDK",
   "type": "module",
   "sideEffects": false,

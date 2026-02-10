@@ -103,7 +103,7 @@ await client.system.callbar.show({
     number: 1234567890,
     status: 'Talking', // 'Talking' | 'Ringing' | 'Missed' | 'Dialing'
   },
-  objectConfig: [
+  objectConfigs: [
     {
       objectType: '1',
       order: 1,

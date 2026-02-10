@@ -78,7 +78,7 @@ export type CallbarPayload = {
     number: number;
     status: 'Talking' | 'Ringing' | 'Missed' | 'Dialing';
   };
-  objectConfig: {
+  objectConfigs: {
     objectType: string;
     order?: number;
     fields: {
@@ -87,6 +87,7 @@ export type CallbarPayload = {
   }[];
   placement: 'bottom-start' | 'bottom-end';
 };
+
 
 export interface API<TData extends Response> {
   query: (objectType: string | number, payload: QueryPayload) => Promise<ResponseData<TData>>;
