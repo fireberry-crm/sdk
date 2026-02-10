@@ -88,7 +88,6 @@ export type CallbarPayload = {
   placement: 'bottom-start' | 'bottom-end';
 };
 
-
 export interface API<TData extends Response> {
   query: (objectType: string | number, payload: QueryPayload) => Promise<ResponseData<TData>>;
   create: <T extends Payload>(
