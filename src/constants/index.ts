@@ -2,6 +2,7 @@ export const MESSAGE_TYPES = {
   RESPONSE: 'RESPONSE',
   REQUEST: 'REQUEST',
   REQUEST_CONTEXT: 'REQUEST_CONTEXT',
+  LOG: 'LOG',
 } as const;
 
 export const REQUEST_ACTIONS = {

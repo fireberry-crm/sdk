@@ -29,6 +29,15 @@ export class IframeMessageManager<TData extends Response> {
     }
   }
 
+  protected logError(message: string, context?: Record<string, unknown>): void {
+    this.sendMessage({
+      type: MESSAGE_TYPES.LOG,
+      message: `[Fireberry SDK] ${message}`,
+      context,
+      timestamp: new Date().toISOString(),
+    });
+  }
+
   protected sendMessageWithPromise(payload: MessagePayload): Promise<ResponseData<TData>> {
     const requestId = `req_${++this.requestIdCounter}_${Date.now()}`;
 
@@ -45,7 +54,12 @@ export class IframeMessageManager<TData extends Response> {
       setTimeout(() => {
         if (this.pendingRequests.has(requestId)) {
           this.pendingRequests.delete(requestId);
-          reject(new Error('Request timeout: No response received'));
+          const error = new Error('Request timeout: No response received');
+          this.logError('Request timeout: No response received', {
+            requestId,
+            payload: payloadWithId,
+          });
+          reject(error);
         }
       }, TIMEOUT_DURATION);
     });
@@ -80,6 +94,10 @@ export class IframeMessageManager<TData extends Response> {
         handlePendingRequest(requestId);
         break;
       default:
+        this.logError(`Unknown response type: ${type}`, {
+          type,
+          payload,
+        });
         throw new Error(`Unknown response type: ${type}`);
     }
   }
@@ -87,7 +105,10 @@ export class IframeMessageManager<TData extends Response> {
   public destroy(): void {
     window.removeEventListener('message', this.handleMessage);
 
-    this.pendingRequests.forEach(({ reject }) => {
+    this.pendingRequests.forEach(({ reject }, requestId) => {
+      this.logError('SDK destroyed with pending request', {
+        requestId,
+      });
       reject(new Error('SDK destroyed'));
     });
 
