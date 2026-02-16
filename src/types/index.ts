@@ -88,9 +88,22 @@ export type CallbarPayload = {
   placement: 'bottom-start' | 'bottom-end';
 };
 
-export type SettingsPayload = {
-  settings: Record<string, unknown>;
+export type JsonPrimitive = string | number | boolean | null;
+export type JsonObject = { [key: string]: JsonValue };
+export type JsonArray = JsonValue[];
+export type JsonValue = JsonPrimitive | JsonObject | JsonArray;
+
+export type SettingsResponse<TSettings = JsonValue> = {
+  success: boolean;
+  data: TSettings;
+  error?: ResponseError;
+  requestId: string;
 };
+
+export interface SettingsAPI<TSettings = JsonValue> {
+  get: () => Promise<SettingsResponse<TSettings>>;
+  set: (settings: TSettings) => Promise<SettingsResponse<TSettings>>;
+}
 
 export interface API<TData extends Response> {
   query: (objectType: string | number, payload: QueryPayload) => Promise<ResponseData<TData>>;

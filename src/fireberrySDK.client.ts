@@ -5,16 +5,22 @@ import type {
   API,
   BadgePayload,
   CallbarPayload,
+  JsonValue,
   Payload,
   QueryPayload,
   RecordDetails,
   Response,
   ResponseData,
   ResponseError,
+  SettingsAPI,
+  SettingsResponse,
   UserDetails,
 } from './types';
 
-export class FireberryClientSDK<TData extends Response> extends IframeMessageManager<TData> {
+export class FireberryClientSDK<
+  TData extends Response,
+  TSettings = JsonValue,
+> extends IframeMessageManager<TData> {
   private _context: Context | null = null;
   constructor() {
     super();
@@ -33,10 +39,10 @@ export class FireberryClientSDK<TData extends Response> extends IframeMessageMan
     return this._context;
   }
 
-  get settings() {
+  get settings(): SettingsAPI<TSettings> {
     return {
       get: this.getSettings.bind(this),
-      update: this.updateSettings.bind(this),
+      set: this.setSettings.bind(this),
     };
   }
 
@@ -57,8 +63,8 @@ export class FireberryClientSDK<TData extends Response> extends IframeMessageMan
    * @param this - see what `this` argument means here https://www.typescriptlang.org/docs/handbook/2/classes.html#this-parameters
    */
   async initializeContext<T extends TData>(
-    this: FireberryClientSDK<T>
-  ): Promise<FireberryClientSDK<T>> {
+    this: FireberryClientSDK<T, TSettings>
+  ): Promise<FireberryClientSDK<T, TSettings>> {
     if (this.context) {
       return this;
     }
@@ -111,19 +117,21 @@ export class FireberryClientSDK<TData extends Response> extends IframeMessageMan
     });
   }
 
-  private getSettings(): Promise<ResponseData<TData>> {
-    return this.sendMessageWithPromise({
+  private async getSettings(): Promise<SettingsResponse<TSettings>> {
+    const { data, ...response } = await this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.GET_SETTINGS,
     });
+    return { ...response, data: data as unknown as TSettings };
   }
 
-  private updateSettings(settings: Record<string, unknown>): Promise<ResponseData<TData>> {
-    return this.sendMessageWithPromise({
+  private async setSettings(settings: TSettings): Promise<SettingsResponse<TSettings>> {
+    const { data, ...response } = await this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.UPDATE_SETTINGS,
       settings,
     });
+    return { ...response, data: data as unknown as TSettings };
   }
 
   private setContext(context: Context): void {
@@ -193,11 +201,13 @@ export class FireberryClientSDK<TData extends Response> extends IframeMessageMan
 export type {
   BusinessObject,
   Data,
+  JsonValue,
   Payload,
   QueryPayload,
   ResponseData,
   ResponseError,
-  SettingsPayload,
+  SettingsAPI,
+  SettingsResponse,
 } from './types';
 
 export default FireberryClientSDK;
