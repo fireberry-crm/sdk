@@ -33,6 +33,13 @@ export class FireberryClientSDK<TData extends Response> extends IframeMessageMan
     return this._context;
   }
 
+  get settings() {
+    return {
+      get: this.getSettings.bind(this),
+      update: this.updateSettings.bind(this),
+    };
+  }
+
   get system() {
     return {
       callbar: {
@@ -101,6 +108,21 @@ export class FireberryClientSDK<TData extends Response> extends IframeMessageMan
     return this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.HIDE_BADGE,
+    });
+  }
+
+  private getSettings(): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GET_SETTINGS,
+    });
+  }
+
+  private updateSettings(settings: Record<string, unknown>): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.UPDATE_SETTINGS,
+      settings,
     });
   }
 
@@ -175,6 +197,7 @@ export type {
   QueryPayload,
   ResponseData,
   ResponseError,
+  SettingsPayload,
 } from './types';
 
 export default FireberryClientSDK;
