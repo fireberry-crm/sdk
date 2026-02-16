@@ -13,7 +13,6 @@ import type {
   ResponseData,
   ResponseError,
   SettingsAPI,
-  SettingsResponse,
   UserDetails,
 } from './types';
 
@@ -117,21 +116,21 @@ export class FireberryClientSDK<
     });
   }
 
-  private async getSettings(): Promise<SettingsResponse<TSettings>> {
-    const { data, ...response } = await this.sendMessageWithPromise({
+  private async getSettings(): Promise<TSettings> {
+    const { data } = await this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.GET_SETTINGS,
     });
-    return { ...response, data: data as unknown as TSettings };
+    return data as unknown as TSettings;
   }
 
-  private async setSettings(settings: TSettings): Promise<SettingsResponse<TSettings>> {
-    const { data, ...response } = await this.sendMessageWithPromise({
+  private async setSettings(settings: TSettings): Promise<TSettings> {
+    const { data } = await this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.UPDATE_SETTINGS,
       settings,
     });
-    return { ...response, data: data as unknown as TSettings };
+    return data as unknown as TSettings;
   }
 
   private setContext(context: Context): void {
@@ -207,7 +206,6 @@ export type {
   ResponseData,
   ResponseError,
   SettingsAPI,
-  SettingsResponse,
 } from './types';
 
 export default FireberryClientSDK;

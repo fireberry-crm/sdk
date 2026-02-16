@@ -93,16 +93,9 @@ export type JsonObject = { [key: string]: JsonValue };
 export type JsonArray = JsonValue[];
 export type JsonValue = JsonPrimitive | JsonObject | JsonArray;
 
-export type SettingsResponse<TSettings = JsonValue> = {
-  success: boolean;
-  data: TSettings;
-  error?: ResponseError;
-  requestId: string;
-};
-
 export interface SettingsAPI<TSettings = JsonValue> {
-  get: () => Promise<SettingsResponse<TSettings>>;
-  set: (settings: TSettings) => Promise<SettingsResponse<TSettings>>;
+  get: () => Promise<TSettings>;
+  set: (settings: TSettings) => Promise<TSettings>;
 }
 
 export interface API<TData extends Response> {
