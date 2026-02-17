@@ -37,8 +37,10 @@ export class FireberryClientSDK<
   get context(): Context | null {
     return this._context;
   }
-
-  get settings(): SettingsAPI<TSettings> {
+  app = {
+    settings: this.settings,
+  };
+  private get settings(): SettingsAPI<TSettings> {
     return {
       get: this.getSettings.bind(this),
       set: this.setSettings.bind(this),
