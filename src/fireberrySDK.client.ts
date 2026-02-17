@@ -121,7 +121,7 @@ export class FireberryClientSDK<
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.GET_SETTINGS,
     });
-    return data as unknown as TSettings;
+    return (data as unknown as { settings: TSettings }).settings;
   }
 
   private async setSettings(settings: TSettings): Promise<TSettings> {
@@ -130,7 +130,7 @@ export class FireberryClientSDK<
       action: REQUEST_ACTIONS.UPDATE_SETTINGS,
       settings,
     });
-    return data as unknown as TSettings;
+    return (data as unknown as { settings: TSettings }).settings;
   }
 
   private setContext(context: Context): void {
