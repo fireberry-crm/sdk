@@ -26,6 +26,7 @@ export type RecordDetails = Partial<{
 export type UserDetails = Partial<{
   fullName: string;
   id: string;
+  organizationId: string;
 }>;
 
 export type ContextDetails = {
