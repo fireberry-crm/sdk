@@ -5,16 +5,21 @@ import type {
   API,
   BadgePayload,
   CallbarPayload,
+  JsonValue,
   Payload,
   QueryPayload,
   RecordDetails,
   Response,
   ResponseData,
   ResponseError,
+  SettingsAPI,
   UserDetails,
 } from './types';
 
-export class FireberryClientSDK<TData extends Response> extends IframeMessageManager<TData> {
+export class FireberryClientSDK<
+  TData extends Response,
+  TSettings = JsonValue,
+> extends IframeMessageManager<TData> {
   private _context: Context | null = null;
   constructor() {
     super();
@@ -31,6 +36,15 @@ export class FireberryClientSDK<TData extends Response> extends IframeMessageMan
 
   get context(): Context | null {
     return this._context;
+  }
+  app = {
+    settings: this.settings,
+  };
+  private get settings(): SettingsAPI<TSettings> {
+    return {
+      get: this.getSettings.bind(this),
+      set: this.setSettings.bind(this),
+    };
   }
 
   get system() {
@@ -50,8 +64,8 @@ export class FireberryClientSDK<TData extends Response> extends IframeMessageMan
    * @param this - see what `this` argument means here https://www.typescriptlang.org/docs/handbook/2/classes.html#this-parameters
    */
   async initializeContext<T extends TData>(
-    this: FireberryClientSDK<T>
-  ): Promise<FireberryClientSDK<T>> {
+    this: FireberryClientSDK<T, TSettings>
+  ): Promise<FireberryClientSDK<T, TSettings>> {
     if (this.context) {
       return this;
     }
@@ -102,6 +116,23 @@ export class FireberryClientSDK<TData extends Response> extends IframeMessageMan
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.HIDE_BADGE,
     });
+  }
+
+  private async getSettings(): Promise<TSettings> {
+    const { data } = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GET_SETTINGS,
+    });
+    return (data as unknown as { settings: TSettings }).settings;
+  }
+
+  private async setSettings(settings: TSettings): Promise<TSettings> {
+    const { data } = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.UPDATE_SETTINGS,
+      settings,
+    });
+    return (data as unknown as { settings: TSettings }).settings;
   }
 
   private setContext(context: Context): void {
@@ -171,10 +202,12 @@ export class FireberryClientSDK<TData extends Response> extends IframeMessageMan
 export type {
   BusinessObject,
   Data,
+  JsonValue,
   Payload,
   QueryPayload,
   ResponseData,
   ResponseError,
+  SettingsAPI,
 } from './types';
 
 export default FireberryClientSDK;
