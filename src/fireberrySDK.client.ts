@@ -82,7 +82,11 @@ export class FireberryClientSDK<TData extends Response> extends IframeMessageMan
     this.setContext(
       new Context({
         record: { id: recordId, type: objectType },
-        user: { fullName: userInfo.fullName, id: userInfo.id },
+        user: {
+          fullName: userInfo.fullName,
+          id: userInfo.id,
+          organizationId: userInfo.organizationId,
+        },
       })
     );
 
