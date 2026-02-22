@@ -13,6 +13,7 @@ import type {
   ResponseData,
   ResponseError,
   SettingsAPI,
+  ToastPayload,
   UserDetails,
 } from './types';
 
@@ -56,6 +57,10 @@ export class FireberryClientSDK<
       badge: {
         show: this.showBadge.bind(this),
         hide: this.hideBadge.bind(this),
+      },
+      toast: {
+        show: this.showToast.bind(this),
+        hide: this.hideToast.bind(this),
       },
     };
   }
@@ -155,6 +160,21 @@ export class FireberryClientSDK<
     return this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.HIDE_CALLBAR,
+    });
+  }
+
+  private showToast(payload: ToastPayload): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.SHOW_TOAST,
+      ...payload,
+    });
+  }
+
+  private hideToast(): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.HIDE_TOAST,
     });
   }
 
