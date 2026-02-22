@@ -224,7 +224,9 @@ export class FireberryClientSDK<
 }
 
 export type {
+  BadgePayload,
   BusinessObject,
+  CallbarPayload,
   Data,
   JsonValue,
   Payload,
@@ -232,6 +234,7 @@ export type {
   ResponseData,
   ResponseError,
   SettingsAPI,
+  ToastPayload,
 } from './types';
 
 export default FireberryClientSDK;
