@@ -117,6 +117,49 @@ await client.system.callbar.show({
 await client.system.callbar.hide();
 ```
 
+#### Toasts
+
+Display temporary notification messages to provide feedback to users about actions, status updates, or important information.
+
+```typescript
+// Show a toast notification
+await client.system.toast.show({
+  content: 'Record saved successfully!',
+  toastType: 'success', // 'success' | 'warning' | 'error' | 'info'
+  placement: 'top-end', // 'top-left' | 'top-center' | 'top-right' | 'top-start' | 'top-end' | 'bottom-left' | 'bottom-center' | 'bottom-right' | 'bottom-start' | 'bottom-end'
+  withCloseButton: true, // Optional: adds a close button
+  autoDismissTimeout: 5000, // Optional: auto-dismiss after 5 seconds (in milliseconds)
+});
+
+// Hide the toast manually
+await client.system.toast.hide();
+```
+
+**Toast Types:**
+
+- `success` — Green toast for successful operations
+- `warning` — Yellow toast for warnings or cautions
+- `error` — Red toast for errors or failures
+- `info` — Blue toast for informational messages
+
+**Placement Options:**
+
+- `top-left` — Top left corner (absolute)
+- `top-center` — Top center
+- `top-right` — Top right corner (absolute)
+- `top-start` — Top start (left in LTR, right in RTL)
+- `top-end` — Top end (right in LTR, left in RTL)
+- `bottom-left` — Bottom left corner (absolute)
+- `bottom-center` — Bottom center
+- `bottom-right` — Bottom right corner (absolute)
+- `bottom-start` — Bottom start (left in LTR, right in RTL)
+- `bottom-end` — Bottom end (right in LTR, left in RTL)
+
+**Optional Parameters:**
+
+- `withCloseButton` — When `true`, displays an X button to manually dismiss the toast
+- `autoDismissTimeout` — Time in milliseconds before the toast automatically disappears. If not provided, the toast remains visible until manually dismissed
+
 ## Browser Support
 
 - Modern browsers with ES6+ support
