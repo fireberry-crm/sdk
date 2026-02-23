@@ -26,6 +26,7 @@ export type RecordDetails = Partial<{
 export type UserDetails = Partial<{
   fullName: string;
   id: string;
+  organizationId: string;
 }>;
 
 export type ContextDetails = {
@@ -64,6 +65,28 @@ export type QueryPayload = {
   query: string;
   page_size?: number;
   page_number?: number;
+};
+
+export type BadgeType = 'success' | 'warning' | 'error' | 'info';
+
+export type BadgePayload = {
+  number: number;
+  badgeType: BadgeType;
+};
+
+export type CallbarPayload = {
+  callInfo: {
+    number: number;
+    status: 'Talking' | 'Ringing' | 'Missed' | 'Dialing';
+  };
+  objectConfigs: {
+    objectType: string;
+    order?: number;
+    fields: {
+      name: string;
+    }[];
+  }[];
+  placement: 'bottom-start' | 'bottom-end';
 };
 
 export interface API<TData extends Response> {

@@ -6,10 +6,14 @@ export const MESSAGE_TYPES = {
 } as const;
 
 export const REQUEST_ACTIONS = {
+  SHOW_CALLBAR: 'SHOW_CALLBAR',
+  HIDE_CALLBAR: 'HIDE_CALLBAR',
   CREATE: 'CREATE',
   DELETE: 'DELETE',
   UPDATE: 'UPDATE',
   QUERY: 'QUERY',
+  SHOW_BADGE: 'SHOW_BADGE',
+  HIDE_BADGE: 'HIDE_BADGE',
 } as const;
 
 export const TIMEOUT_DURATION = 60000; // one minute;
