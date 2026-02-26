@@ -5,6 +5,7 @@ import type {
   API,
   BadgePayload,
   CallbarPayload,
+  GetFilesResponse,
   JsonValue,
   Payload,
   QueryPayload,
@@ -13,6 +14,8 @@ import type {
   ResponseData,
   ResponseError,
   SettingsAPI,
+  StorageAPI,
+  StorageRecordAPI,
   UserDetails,
 } from './types';
 
@@ -39,11 +42,27 @@ export class FireberryClientSDK<
   }
   app = {
     settings: this.settings,
+    storage: this.storage,
   };
   private get settings(): SettingsAPI<TSettings> {
     return {
       get: this.getSettings.bind(this),
       set: this.setSettings.bind(this),
+    };
+  }
+
+  private get storage(): StorageAPI {
+    return {
+      uploadFile: this.uploadFile.bind(this),
+      deleteFile: this.deleteFile.bind(this),
+      getFiles: this.getFiles.bind(this),
+    };
+  }
+
+  private get storageRecord(): StorageRecordAPI {
+    return {
+      uploadFile: this.uploadFileRecord.bind(this),
+      getFiles: this.getFilesRecord.bind(this),
     };
   }
 
@@ -95,7 +114,7 @@ export class FireberryClientSDK<
 
     this.setContext(
       new Context({
-        record: { id: recordId, type: objectType },
+        record: { id: recordId, type: objectType, storage: this.storageRecord },
         user: {
           fullName: userInfo.fullName,
           id: userInfo.id,
@@ -201,17 +220,73 @@ export class FireberryClientSDK<
       ...payload,
     });
   }
+
+  private async deleteFile(fileId: string): Promise<void> {
+    await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.DELETE_FILE,
+      fileId,
+    });
+  }
+
+  private async getFiles(options?: {
+    recordId?: string;
+    objectType?: string | number;
+  }): Promise<GetFilesResponse> {
+    const response = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GET_FILES,
+      recordId: options?.recordId,
+      objectType: options?.objectType,
+    });
+    return response.data as unknown as GetFilesResponse;
+  }
+
+  private async getFilesRecord(): Promise<GetFilesResponse> {
+    const response = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GET_RECORD_FILES,
+    });
+    return response.data as unknown as GetFilesResponse;
+  }
+
+  private async uploadFile(
+    file: File,
+    options?: { recordId?: string; objectType?: string | number }
+  ): Promise<{ url: string; id: string }> {
+    const response = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.UPLOAD_FILE,
+      file,
+      recordId: options?.recordId,
+      objectType: options?.objectType,
+    });
+    return response.data as unknown as { url: string; id: string };
+  }
+
+  private async uploadFileRecord(file: File): Promise<{ url: string; id: string }> {
+    const response = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.UPLOAD_RECORD_FILE,
+      file,
+    });
+    return response.data as unknown as { url: string; id: string };
+  }
 }
 
 export type {
   BusinessObject,
   Data,
+  FileMetadata,
+  GetFilesResponse,
   JsonValue,
   Payload,
   QueryPayload,
   ResponseData,
   ResponseError,
   SettingsAPI,
+  StorageAPI,
+  StorageRecordAPI,
 } from './types';
 
 export default FireberryClientSDK;
