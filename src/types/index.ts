@@ -21,6 +21,7 @@ export type ResponseError = {
 export type RecordDetails = Partial<{
   type: number;
   id: string;
+  storage: StorageRecordAPI;
 }>;
 
 export type UserDetails = Partial<{
@@ -111,4 +112,35 @@ export interface API<TData extends Response> {
     recordId: string,
     payload: T
   ) => Promise<ResponseData<TData>>;
+}
+
+export type FileMetadata = {
+  url: string;
+  id: string;
+  name: string;
+  size: number;
+};
+
+export type GetFilesResponse = {
+  data: FileMetadata[];
+  pageNumber: number;
+  pageSize: number;
+  isLastPage: boolean;
+};
+
+export interface StorageAPI {
+  uploadFile: (
+    file: File,
+    options?: { recordId?: string; objectType?: string | number }
+  ) => Promise<{ url: string; id: string }>;
+  deleteFile: (fileId: string) => Promise<void>;
+  getFiles: (options?: {
+    recordId?: string;
+    objectType?: string | number;
+  }) => Promise<GetFilesResponse>;
+}
+
+export interface StorageRecordAPI {
+  uploadFile: (file: File) => Promise<{ url: string; id: string }>;
+  getFiles: () => Promise<GetFilesResponse>;
 }
