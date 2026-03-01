@@ -229,15 +229,10 @@ export class FireberryClientSDK<
     });
   }
 
-  private async getFiles(options?: {
-    recordId?: string;
-    objectType?: string | number;
-  }): Promise<GetFilesResponse> {
+  private async getFiles(): Promise<GetFilesResponse> {
     const response = await this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.GET_FILES,
-      recordId: options?.recordId,
-      objectType: options?.objectType,
     });
     return response.data as unknown as GetFilesResponse;
   }
@@ -250,16 +245,11 @@ export class FireberryClientSDK<
     return response.data as unknown as GetFilesResponse;
   }
 
-  private async uploadFile(
-    file: File,
-    options?: { recordId?: string; objectType?: string | number }
-  ): Promise<{ url: string; id: string }> {
+  private async uploadFile(file: File): Promise<{ url: string; id: string }> {
     const response = await this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.UPLOAD_FILE,
       file,
-      recordId: options?.recordId,
-      objectType: options?.objectType,
     });
     return response.data as unknown as { url: string; id: string };
   }
