@@ -16,6 +16,24 @@ export const REQUEST_ACTIONS = {
   HIDE_BADGE: 'HIDE_BADGE',
   GET_SETTINGS: 'GET_SETTINGS',
   UPDATE_SETTINGS: 'UPDATE_SETTINGS',
+  GET_METADATA_FIELDS: 'GET_METADATA_FIELDS',
+  GET_METADATA_FIELD: 'GET_METADATA_FIELD',
 } as const;
+
+export const FIELD_TYPES = [
+  'date',
+  'dateTime',
+  'emailAddress',
+  'lookUp',
+  'number',
+  'picklist',
+  'richText',
+  'text',
+  'textArea',
+  'url',
+  'telephone',
+  'formula',
+  'summary',
+] as const;
 
 export const TIMEOUT_DURATION = 60000; // one minute;
