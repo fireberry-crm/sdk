@@ -21,6 +21,7 @@ export const REQUEST_ACTIONS = {
   DELETE_FILE: 'DELETE_FILE',
   GET_FILES: 'GET_FILES',
   GET_RECORD_FILES: 'GET_RECORD_FILES',
+  GET_FILE: 'GET_FILE',
 } as const;
 
 export const TIMEOUT_DURATION = 60000; // one minute;
