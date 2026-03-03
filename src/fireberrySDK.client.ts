@@ -7,6 +7,7 @@ import type {
   CallbarPayload,
   GetFilesResponse,
   JsonValue,
+  PaginationPayload,
   Payload,
   QueryPayload,
   RecordDetails,
@@ -56,13 +57,14 @@ export class FireberryClientSDK<
       uploadFile: this.uploadFile.bind(this),
       deleteFile: this.deleteFile.bind(this),
       getFiles: this.getFiles.bind(this),
+      getFile: this.getFile.bind(this),
     };
   }
 
   private get storageRecord(): StorageRecordAPI {
     return {
       uploadFile: this.uploadFileRecord.bind(this),
-      getFiles: this.getFilesRecord.bind(this),
+      getFiles: this.getRecordFiles.bind(this),
     };
   }
 
@@ -229,20 +231,31 @@ export class FireberryClientSDK<
     });
   }
 
-  private async getFiles(): Promise<GetFilesResponse> {
+  private async getFiles(payload: PaginationPayload): Promise<GetFilesResponse> {
     const response = await this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.GET_FILES,
+      ...payload,
     });
     return response.data as unknown as GetFilesResponse;
   }
 
-  private async getFilesRecord(): Promise<GetFilesResponse> {
+  private async getRecordFiles(payload: PaginationPayload): Promise<GetFilesResponse> {
     const response = await this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.GET_RECORD_FILES,
+      ...payload,
     });
     return response.data as unknown as GetFilesResponse;
+  }
+
+  private async getFile(fileId: string): Promise<File> {
+    const response = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GET_FILE,
+      fileId,
+    });
+    return response.data as unknown as File;
   }
 
   private async uploadFile(file: File): Promise<{ url: string; id: string }> {
