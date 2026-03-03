@@ -113,11 +113,11 @@ type PicklistFieldMeta = FieldMetaBase & {
   options: PicklistOption[];
 };
 
-type OtherFieldMeta = FieldMetaBase & {
+type RegularFieldMeta = FieldMetaBase & {
   type: Exclude<FieldType, 'lookUp' | 'picklist'>;
 };
 
-export type FieldMeta = LookUpFieldMeta | PicklistFieldMeta | OtherFieldMeta;
+export type FieldMeta = LookUpFieldMeta | PicklistFieldMeta | RegularFieldMeta;
 
 export interface MetadataAPI {
   getFields: (objectType: string | number) => Promise<string[]>;
