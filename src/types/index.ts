@@ -27,7 +27,19 @@ export type UserDetails = Partial<{
   fullName: string;
   id: string;
   organizationId: string;
+  license: LicenseDetails | null;
 }>;
+
+export type LicenseDetails = {
+  licenseLevel: number;
+  invoiceName: string;
+  subscription?: {
+    seats: number;
+    billingCyclePlan: string;
+    status: string;
+    endDate: Date;
+  };
+};
 
 export type ContextDetails = {
   record: RecordDetails;
