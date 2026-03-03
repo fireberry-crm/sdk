@@ -205,6 +205,8 @@ export class FireberryClientSDK<
 }
 
 export type {
+  AppSubscriptionBillingCyclePlanValues,
+  AppSubscriptionStatusValues,
   BusinessObject,
   Data,
   JsonValue,
@@ -215,5 +217,7 @@ export type {
   ResponseError,
   SettingsAPI,
 } from './types';
+
+export { AppSubscriptionBillingCyclePlan, AppSubscriptionStatus } from './constants';
 
 export default FireberryClientSDK;

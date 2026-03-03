@@ -1,4 +1,9 @@
-import { MESSAGE_TYPES, REQUEST_ACTIONS } from '../constants';
+import {
+  AppSubscriptionBillingCyclePlan,
+  AppSubscriptionStatus,
+  MESSAGE_TYPES,
+  REQUEST_ACTIONS,
+} from '../constants';
 import { Context } from '../context';
 
 export type Response = Partial<BusinessObject> & Partial<Context>;
@@ -30,13 +35,19 @@ export type UserDetails = Partial<{
   license: LicenseDetails | null;
 }>;
 
+export type AppSubscriptionBillingCyclePlanValues =
+  (typeof AppSubscriptionBillingCyclePlan)[keyof typeof AppSubscriptionBillingCyclePlan];
+
+export type AppSubscriptionStatusValues =
+  (typeof AppSubscriptionStatus)[keyof typeof AppSubscriptionStatus];
+
 export type LicenseDetails = {
   licenseLevel: number;
   invoiceName: string;
   subscription?: {
     seats: number;
-    billingCyclePlan: string;
-    status: string;
+    billingCyclePlan: AppSubscriptionBillingCyclePlanValues;
+    status: AppSubscriptionStatusValues;
     endDate: Date;
   };
 };
