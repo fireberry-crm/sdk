@@ -8,6 +8,7 @@ import type {
   FieldMeta,
   JsonValue,
   ObjectMeta,
+  ObjectType,
   Payload,
   QueryPayload,
   RecordDetails,
@@ -165,7 +166,7 @@ export class FireberryClientSDK<
     });
   }
 
-  private query(objectType: string | number, payload: QueryPayload): Promise<ResponseData<TData>> {
+  private query(objectType: ObjectType, payload: QueryPayload): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.QUERY,
@@ -175,7 +176,7 @@ export class FireberryClientSDK<
   }
 
   private create<T extends Payload>(
-    objectType: string | number,
+    objectType: ObjectType,
     payload: T
   ): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
@@ -186,7 +187,7 @@ export class FireberryClientSDK<
     });
   }
 
-  private delete(objectType: string | number, recordId: string): Promise<ResponseData<TData>> {
+  private delete(objectType: ObjectType, recordId: string): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.DELETE,
@@ -196,7 +197,7 @@ export class FireberryClientSDK<
   }
 
   private update<T extends Payload>(
-    objectType: string | number,
+    objectType: ObjectType,
     recordId: string,
     payload: T
   ): Promise<ResponseData<TData>> {
@@ -209,7 +210,7 @@ export class FireberryClientSDK<
     });
   }
 
-  private async getMetadataFields(objectType: string | number): Promise<string[]> {
+  private async getMetadataFields(objectType: ObjectType): Promise<string[]> {
     const { data } = await this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.GET_METADATA_FIELDS,
@@ -218,10 +219,7 @@ export class FireberryClientSDK<
     return (data as unknown as { fields: string[] }).fields;
   }
 
-  private async getMetadataField(
-    objectType: string | number,
-    fieldName: string
-  ): Promise<FieldMeta> {
+  private async getMetadataField(objectType: ObjectType, fieldName: string): Promise<FieldMeta> {
     const { data } = await this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.GET_METADATA_FIELD,
@@ -240,7 +238,7 @@ export class FireberryClientSDK<
   }
 }
 
-export { FIELD_TYPES } from './constants';
+export { FIELD_TYPES, OBJECTS } from './constants';
 
 export type {
   BusinessObject,
@@ -250,6 +248,8 @@ export type {
   JsonValue,
   MetadataAPI,
   ObjectMeta,
+  Objects,
+  ObjectType,
   Payload,
   PicklistOption,
   QueryPayload,
