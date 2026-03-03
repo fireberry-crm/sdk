@@ -5,6 +5,7 @@ import type {
   API,
   BadgePayload,
   CallbarPayload,
+  FieldMeta,
   JsonValue,
   Payload,
   QueryPayload,
@@ -31,6 +32,10 @@ export class FireberryClientSDK<
       create: this.create.bind(this),
       delete: this.delete.bind(this),
       update: this.update.bind(this),
+      metadata: {
+        getFields: this.getMetadataFields.bind(this),
+        getField: this.getMetadataField.bind(this),
+      },
     };
   }
 
@@ -201,13 +206,41 @@ export class FireberryClientSDK<
       ...payload,
     });
   }
+
+  private async getMetadataFields(objectType: string | number): Promise<string[]> {
+    const { data } = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GET_METADATA_FIELDS,
+      objectType,
+    });
+    return (data as unknown as { fields: string[] }).fields;
+  }
+
+  private async getMetadataField(
+    objectType: string | number,
+    fieldName: string
+  ): Promise<FieldMeta> {
+    const { data } = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GET_METADATA_FIELD,
+      objectType,
+      fieldName,
+    });
+    return (data as unknown as { field: FieldMeta }).field;
+  }
 }
+
+export { FIELD_TYPES } from './constants';
 
 export type {
   BusinessObject,
   Data,
+  FieldMeta,
+  FieldType,
   JsonValue,
+  MetadataAPI,
   Payload,
+  PicklistOption,
   QueryPayload,
   ResponseData,
   ResponseError,
