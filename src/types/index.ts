@@ -128,19 +128,19 @@ export type GetFilesResponse = {
   isLastPage: boolean;
 };
 
+export type PaginationPayload = {
+  pageNumber?: number;
+  pageSize?: number;
+};
+
 export interface StorageAPI {
-  uploadFile: (
-    file: File,
-    options?: { recordId?: string; objectType?: string | number }
-  ) => Promise<{ url: string; id: string }>;
+  getFile: (fileId: string) => Promise<File>;
+  uploadFile: (file: File) => Promise<{ url: string; id: string }>;
   deleteFile: (fileId: string) => Promise<void>;
-  getFiles: (options?: {
-    recordId?: string;
-    objectType?: string | number;
-  }) => Promise<GetFilesResponse>;
+  getFiles: (payload: PaginationPayload) => Promise<GetFilesResponse>;
 }
 
 export interface StorageRecordAPI {
   uploadFile: (file: File) => Promise<{ url: string; id: string }>;
-  getFiles: () => Promise<GetFilesResponse>;
+  getFiles: (payload: PaginationPayload) => Promise<GetFilesResponse>;
 }
