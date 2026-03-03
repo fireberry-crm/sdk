@@ -7,6 +7,7 @@ import type {
   CallbarPayload,
   FieldMeta,
   JsonValue,
+  ObjectMeta,
   Payload,
   QueryPayload,
   RecordDetails,
@@ -35,6 +36,7 @@ export class FireberryClientSDK<
       metadata: {
         getFields: this.getMetadataFields.bind(this),
         getField: this.getMetadataField.bind(this),
+        getObjects: this.getMetadataObjects.bind(this),
       },
     };
   }
@@ -228,6 +230,14 @@ export class FireberryClientSDK<
     });
     return (data as unknown as { field: FieldMeta }).field;
   }
+
+  private async getMetadataObjects(): Promise<ObjectMeta[]> {
+    const { data } = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GET_METADATA_OBJECTS,
+    });
+    return (data as unknown as { objects: ObjectMeta[] }).objects;
+  }
 }
 
 export { FIELD_TYPES } from './constants';
@@ -239,6 +249,7 @@ export type {
   FieldType,
   JsonValue,
   MetadataAPI,
+  ObjectMeta,
   Payload,
   PicklistOption,
   QueryPayload,

@@ -119,9 +119,16 @@ type RegularFieldMeta = FieldMetaBase & {
 
 export type FieldMeta = LookUpFieldMeta | PicklistFieldMeta | RegularFieldMeta;
 
+export type ObjectMeta = {
+  type: number;
+  name: string;
+  pluralName: string;
+};
+
 export interface MetadataAPI {
   getFields: (objectType: string | number) => Promise<string[]>;
   getField: (objectType: string | number, fieldName: string) => Promise<FieldMeta>;
+  getObjects: () => Promise<ObjectMeta[]>;
 }
 
 export type JsonPrimitive = string | number | boolean | null;
