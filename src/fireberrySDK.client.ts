@@ -100,6 +100,7 @@ export class FireberryClientSDK<
           fullName: userInfo.fullName,
           id: userInfo.id,
           organizationId: userInfo.organizationId,
+          license: userInfo.license,
         },
       })
     );
@@ -204,14 +205,19 @@ export class FireberryClientSDK<
 }
 
 export type {
+  AppSubscriptionBillingCyclePlanValues,
+  AppSubscriptionStatusValues,
   BusinessObject,
   Data,
   JsonValue,
+  LicenseDetails,
   Payload,
   QueryPayload,
   ResponseData,
   ResponseError,
   SettingsAPI,
 } from './types';
+
+export { AppSubscriptionBillingCyclePlan, AppSubscriptionStatus } from './constants';
 
 export default FireberryClientSDK;
