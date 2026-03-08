@@ -1,5 +1,3 @@
-import { Objects } from '../types/objects';
-
 export const MESSAGE_TYPES = {
   RESPONSE: 'RESPONSE',
   REQUEST: 'REQUEST',
@@ -67,4 +65,4 @@ export const OBJECTS = {
   smsTemplate: 110,
   resources: 114,
   profile: 116,
-} as const satisfies Objects;
+} as const;
