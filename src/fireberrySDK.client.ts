@@ -6,9 +6,11 @@ import type {
   BadgePayload,
   CallbarPayload,
   FieldMeta,
+  GetFilesResponse,
   JsonValue,
   ObjectMeta,
   ObjectType,
+  PaginationPayload,
   Payload,
   PermissionsData,
   QueryPayload,
@@ -17,6 +19,8 @@ import type {
   ResponseData,
   ResponseError,
   SettingsAPI,
+  StorageAPI,
+  StorageRecordAPI,
   ToastPayload,
   UserDetails,
 } from './types';
@@ -49,11 +53,28 @@ export class FireberryClientSDK<
   }
   app = {
     settings: this.settings,
+    storage: this.storage,
   };
   private get settings(): SettingsAPI<TSettings> {
     return {
       get: this.getSettings.bind(this),
       set: this.setSettings.bind(this),
+    };
+  }
+
+  private get storage(): StorageAPI {
+    return {
+      uploadFile: this.uploadFile.bind(this),
+      deleteFile: this.deleteFile.bind(this),
+      getFiles: this.getFiles.bind(this),
+      getFile: this.getFile.bind(this),
+    };
+  }
+
+  private get storageRecord(): StorageRecordAPI {
+    return {
+      uploadFile: this.uploadFileRecord.bind(this),
+      getFiles: this.getRecordFiles.bind(this),
     };
   }
 
@@ -110,7 +131,7 @@ export class FireberryClientSDK<
 
     this.setContext(
       new Context({
-        record: { id: recordId, type: objectType },
+        record: { id: recordId, type: objectType, storage: this.storageRecord },
         user: {
           fullName: userInfo.fullName,
           id: userInfo.id,
@@ -260,6 +281,59 @@ export class FireberryClientSDK<
     });
     return (data as unknown as { objects: ObjectMeta[] }).objects;
   }
+
+  private async deleteFile(fileId: string): Promise<void> {
+    await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.DELETE_FILE,
+      fileId,
+    });
+  }
+
+  private async getFiles(payload: PaginationPayload): Promise<GetFilesResponse> {
+    const response = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GET_FILES,
+      ...payload,
+    });
+    return response.data as unknown as GetFilesResponse;
+  }
+
+  private async getRecordFiles(payload: PaginationPayload): Promise<GetFilesResponse> {
+    const response = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GET_RECORD_FILES,
+      ...payload,
+    });
+    return response.data as unknown as GetFilesResponse;
+  }
+
+  private async getFile(fileId: string): Promise<File> {
+    const response = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GET_FILE,
+      fileId,
+    });
+    return response.data as unknown as File;
+  }
+
+  private async uploadFile(file: File): Promise<{ url: string; id: string }> {
+    const response = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.UPLOAD_FILE,
+      file,
+    });
+    return response.data as unknown as { url: string; id: string };
+  }
+
+  private async uploadFileRecord(file: File): Promise<{ url: string; id: string }> {
+    const response = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.UPLOAD_RECORD_FILE,
+      file,
+    });
+    return response.data as unknown as { url: string; id: string };
+  }
 }
 
 export { FIELD_TYPES, OBJECTS } from './constants';
@@ -274,6 +348,8 @@ export type {
   FeaturePermission,
   FieldMeta,
   FieldType,
+  FileMetadata,
+  GetFilesResponse,
   JsonValue,
   LicenseDetails,
   MetadataAPI,
@@ -290,6 +366,8 @@ export type {
   ResponseData,
   ResponseError,
   SettingsAPI,
+  StorageAPI,
+  StorageRecordAPI,
   ToastPayload,
 } from './types';
 

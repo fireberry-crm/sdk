@@ -28,6 +28,7 @@ export type ResponseError = {
 export type RecordDetails = Partial<{
   type: number;
   id: string;
+  storage: StorageRecordAPI;
 }>;
 
 export type UserDetails = Partial<{
@@ -205,6 +206,36 @@ export interface API<TData extends Response> {
   metadata: MetadataAPI;
 }
 
+export type FileMetadata = {
+  url: string;
+  id: string;
+  name: string;
+  size: number;
+};
+
+export type GetFilesResponse = {
+  data: FileMetadata[];
+  pageNumber: number;
+  pageSize: number;
+  isLastPage: boolean;
+};
+
+export type PaginationPayload = {
+  pageNumber?: number;
+  pageSize?: number;
+};
+
+export interface StorageAPI {
+  getFile: (fileId: string) => Promise<File>;
+  uploadFile: (file: File) => Promise<{ url: string; id: string }>;
+  deleteFile: (fileId: string) => Promise<void>;
+  getFiles: (payload: PaginationPayload) => Promise<GetFilesResponse>;
+}
+
+export interface StorageRecordAPI {
+  uploadFile: (file: File) => Promise<{ url: string; id: string }>;
+  getFiles: (payload: PaginationPayload) => Promise<GetFilesResponse>;
+}
 export type ToastPayload = {
   content: string;
   withCloseButton?: boolean;
