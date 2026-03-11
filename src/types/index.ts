@@ -112,3 +112,21 @@ export interface API<TData extends Response> {
     payload: T
   ) => Promise<ResponseData<TData>>;
 }
+
+export type ToastPayload = {
+  content: string;
+  withCloseButton?: boolean;
+  autoDismissTimeout?: number;
+  toastType: 'success' | 'warning' | 'error' | 'info';
+  placement:
+    | 'top-right'
+    | 'top-left'
+    | 'top-center'
+    | 'top-start'
+    | 'top-end'
+    | 'bottom-right'
+    | 'bottom-left'
+    | 'bottom-center'
+    | 'bottom-start'
+    | 'bottom-end';
+};
