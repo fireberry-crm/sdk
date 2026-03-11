@@ -181,5 +181,23 @@ export interface API<TData extends Response> {
   metadata: MetadataAPI;
 }
 
+export type ToastPayload = {
+  content: string;
+  withCloseButton?: boolean;
+  autoDismissTimeout?: number;
+  toastType: 'success' | 'warning' | 'error' | 'info';
+  placement:
+    | 'top-right'
+    | 'top-left'
+    | 'top-center'
+    | 'top-start'
+    | 'top-end'
+    | 'bottom-right'
+    | 'bottom-left'
+    | 'bottom-center'
+    | 'bottom-start'
+    | 'bottom-end';
+};
+
 export type ObjectType = Objects[keyof Objects] | string | (number & {});
 export type { Objects } from './objects';

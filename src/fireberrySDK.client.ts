@@ -17,6 +17,7 @@ import type {
   ResponseData,
   ResponseError,
   SettingsAPI,
+  ToastPayload,
   UserDetails,
 } from './types';
 
@@ -65,6 +66,10 @@ export class FireberryClientSDK<
       badge: {
         show: this.showBadge.bind(this),
         hide: this.hideBadge.bind(this),
+      },
+      toast: {
+        show: this.showToast.bind(this),
+        hide: this.hideToast.bind(this),
       },
     };
   }
@@ -169,6 +174,21 @@ export class FireberryClientSDK<
     });
   }
 
+  private showToast(payload: ToastPayload): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.SHOW_TOAST,
+      ...payload,
+    });
+  }
+
+  private hideToast(): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.HIDE_TOAST,
+    });
+  }
+
   private query(objectType: ObjectType, payload: QueryPayload): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
@@ -244,7 +264,9 @@ export class FireberryClientSDK<
 export { FIELD_TYPES, OBJECTS } from './constants';
 
 export type {
+  BadgePayload,
   BusinessObject,
+  CallbarPayload,
   Data,
   FeaturePermission,
   FieldMeta,
@@ -264,6 +286,7 @@ export type {
   ResponseData,
   ResponseError,
   SettingsAPI,
+  ToastPayload,
 } from './types';
 
 export default FireberryClientSDK;
