@@ -5,8 +5,12 @@ import type {
   API,
   BadgePayload,
   CallbarPayload,
+  FieldMeta,
   JsonValue,
+  ObjectMeta,
+  ObjectType,
   Payload,
+  PermissionsData,
   QueryPayload,
   RecordDetails,
   Response,
@@ -32,6 +36,11 @@ export class FireberryClientSDK<
       create: this.create.bind(this),
       delete: this.delete.bind(this),
       update: this.update.bind(this),
+      metadata: {
+        getFields: this.getMetadataFields.bind(this),
+        getField: this.getMetadataField.bind(this),
+        getObjects: this.getMetadataObjects.bind(this),
+      },
     };
   }
 
@@ -91,11 +100,12 @@ export class FireberryClientSDK<
       throw new Error(errorMessage);
     }
 
-    const { recordId, objectType, userInfo } =
+    const { recordId, objectType, userInfo, permissions } =
       (response.data as T & {
         recordId: RecordDetails['id'];
         objectType: RecordDetails['type'];
         userInfo: UserDetails;
+        permissions: PermissionsData;
       }) ?? {};
 
     this.setContext(
@@ -105,6 +115,7 @@ export class FireberryClientSDK<
           fullName: userInfo.fullName,
           id: userInfo.id,
           organizationId: userInfo.organizationId,
+          permissions,
         },
       })
     );
@@ -178,7 +189,7 @@ export class FireberryClientSDK<
     });
   }
 
-  private query(objectType: string | number, payload: QueryPayload): Promise<ResponseData<TData>> {
+  private query(objectType: ObjectType, payload: QueryPayload): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.QUERY,
@@ -188,7 +199,7 @@ export class FireberryClientSDK<
   }
 
   private create<T extends Payload>(
-    objectType: string | number,
+    objectType: ObjectType,
     payload: T
   ): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
@@ -199,7 +210,7 @@ export class FireberryClientSDK<
     });
   }
 
-  private delete(objectType: string | number, recordId: string): Promise<ResponseData<TData>> {
+  private delete(objectType: ObjectType, recordId: string): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.DELETE,
@@ -209,7 +220,7 @@ export class FireberryClientSDK<
   }
 
   private update<T extends Payload>(
-    objectType: string | number,
+    objectType: ObjectType,
     recordId: string,
     payload: T
   ): Promise<ResponseData<TData>> {
@@ -221,15 +232,56 @@ export class FireberryClientSDK<
       ...payload,
     });
   }
+
+  private async getMetadataFields(objectType: ObjectType): Promise<string[]> {
+    const { data } = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GET_METADATA_FIELDS,
+      objectType,
+    });
+    return (data as unknown as { fields: string[] }).fields;
+  }
+
+  private async getMetadataField(objectType: ObjectType, fieldName: string): Promise<FieldMeta> {
+    const { data } = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GET_METADATA_FIELD,
+      objectType,
+      fieldName,
+    });
+    return (data as unknown as { field: FieldMeta }).field;
+  }
+
+  private async getMetadataObjects(): Promise<ObjectMeta[]> {
+    const { data } = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GET_METADATA_OBJECTS,
+    });
+    return (data as unknown as { objects: ObjectMeta[] }).objects;
+  }
 }
+
+export { FIELD_TYPES, OBJECTS } from './constants';
 
 export type {
   BadgePayload,
   BusinessObject,
   CallbarPayload,
   Data,
+  FeaturePermission,
+  FieldMeta,
+  FieldType,
   JsonValue,
+  MetadataAPI,
+  ObjectMeta,
+  ObjectPermission,
+  Objects,
+  ObjectType,
   Payload,
+  PermissionFeatures,
+  PermissionObjects,
+  PermissionsData,
+  PicklistOption,
   QueryPayload,
   ResponseData,
   ResponseError,
