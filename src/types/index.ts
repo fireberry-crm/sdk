@@ -28,6 +28,7 @@ export type UserDetails = Partial<{
   fullName: string;
   id: string;
   organizationId: string;
+  permissions: PermissionsData;
 }>;
 
 export type ContextDetails = {
@@ -126,6 +127,32 @@ export type ObjectMeta = {
   pluralName: string;
 };
 
+export type ObjectPermission = {
+  create: boolean;
+  read: boolean;
+  write: boolean;
+  delete: boolean;
+};
+
+export type FeaturePermission = {
+  allowed: boolean;
+};
+
+export type PermissionObjects = {
+  readonly [K in Objects[keyof Objects]]: ObjectPermission;
+} & {
+  readonly [key: number]: ObjectPermission | undefined;
+};
+
+export type PermissionFeatures = {
+  readonly [feature: string]: FeaturePermission;
+};
+
+export type PermissionsData = {
+  objects: PermissionObjects;
+  features: PermissionFeatures;
+};
+
 export interface MetadataAPI {
   getFields: (objectType: ObjectType) => Promise<string[]>;
   getField: (objectType: ObjectType, fieldName: string) => Promise<FieldMeta>;
@@ -155,4 +182,4 @@ export interface API<TData extends Response> {
 }
 
 export type ObjectType = Objects[keyof Objects] | string | (number & {});
-export { Objects } from './objects';
+export type { Objects } from './objects';

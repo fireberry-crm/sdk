@@ -10,6 +10,7 @@ import type {
   ObjectMeta,
   ObjectType,
   Payload,
+  PermissionsData,
   QueryPayload,
   RecordDetails,
   Response,
@@ -94,11 +95,12 @@ export class FireberryClientSDK<
       throw new Error(errorMessage);
     }
 
-    const { recordId, objectType, userInfo } =
+    const { recordId, objectType, userInfo, permissions } =
       (response.data as T & {
         recordId: RecordDetails['id'];
         objectType: RecordDetails['type'];
         userInfo: UserDetails;
+        permissions: PermissionsData;
       }) ?? {};
 
     this.setContext(
@@ -108,6 +110,7 @@ export class FireberryClientSDK<
           fullName: userInfo.fullName,
           id: userInfo.id,
           organizationId: userInfo.organizationId,
+          permissions,
         },
       })
     );
@@ -243,14 +246,19 @@ export { FIELD_TYPES, OBJECTS } from './constants';
 export type {
   BusinessObject,
   Data,
+  FeaturePermission,
   FieldMeta,
   FieldType,
   JsonValue,
   MetadataAPI,
   ObjectMeta,
+  ObjectPermission,
   Objects,
   ObjectType,
   Payload,
+  PermissionFeatures,
+  PermissionObjects,
+  PermissionsData,
   PicklistOption,
   QueryPayload,
   ResponseData,
