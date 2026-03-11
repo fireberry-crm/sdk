@@ -41,6 +41,20 @@ export const FIELD_TYPES = [
 
 export const TIMEOUT_DURATION = 60000; // one minute;
 
+export const APP_SUBSCRIPTION_BILLING_CYCLE_PLAN = {
+  annual: 1,
+  monthly: 2,
+} as const;
+
+export const APP_SUBSCRIPTION_STATUS = {
+  active: 1,
+  inactive: 2,
+  chargeError: 3,
+  blockedPayment: 4,
+  trial: 5,
+  trialExpired: 6,
+} as const;
+
 export const OBJECTS = {
   account: 1,
   contact: 2,

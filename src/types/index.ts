@@ -1,4 +1,10 @@
-import { FIELD_TYPES, MESSAGE_TYPES, REQUEST_ACTIONS } from '../constants';
+import {
+  APP_SUBSCRIPTION_BILLING_CYCLE_PLAN,
+  APP_SUBSCRIPTION_STATUS,
+  FIELD_TYPES,
+  MESSAGE_TYPES,
+  REQUEST_ACTIONS,
+} from '../constants';
 import { Context } from '../context';
 import { Objects } from './objects';
 
@@ -28,8 +34,26 @@ export type UserDetails = Partial<{
   fullName: string;
   id: string;
   organizationId: string;
+  license: LicenseDetails | null;
   permissions: PermissionsData;
 }>;
+
+export type AppSubscriptionBillingCyclePlanValues =
+  (typeof APP_SUBSCRIPTION_BILLING_CYCLE_PLAN)[keyof typeof APP_SUBSCRIPTION_BILLING_CYCLE_PLAN];
+
+export type AppSubscriptionStatusValues =
+  (typeof APP_SUBSCRIPTION_STATUS)[keyof typeof APP_SUBSCRIPTION_STATUS];
+
+export type LicenseDetails = {
+  licenseLevel: number;
+  invoiceName: string;
+  subscription?: {
+    seats: number;
+    billingCyclePlan: AppSubscriptionBillingCyclePlanValues;
+    status: AppSubscriptionStatusValues;
+    endDate: Date;
+  };
+};
 
 export type ContextDetails = {
   record: RecordDetails;

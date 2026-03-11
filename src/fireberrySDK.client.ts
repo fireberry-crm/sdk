@@ -115,6 +115,7 @@ export class FireberryClientSDK<
           fullName: userInfo.fullName,
           id: userInfo.id,
           organizationId: userInfo.organizationId,
+          license: userInfo.license,
           permissions,
         },
       })
@@ -264,6 +265,8 @@ export class FireberryClientSDK<
 export { FIELD_TYPES, OBJECTS } from './constants';
 
 export type {
+  AppSubscriptionBillingCyclePlanValues,
+  AppSubscriptionStatusValues,
   BadgePayload,
   BusinessObject,
   CallbarPayload,
@@ -272,6 +275,7 @@ export type {
   FieldMeta,
   FieldType,
   JsonValue,
+  LicenseDetails,
   MetadataAPI,
   ObjectMeta,
   ObjectPermission,
@@ -288,5 +292,7 @@ export type {
   SettingsAPI,
   ToastPayload,
 } from './types';
+
+export { APP_SUBSCRIPTION_BILLING_CYCLE_PLAN, APP_SUBSCRIPTION_STATUS } from './constants';
 
 export default FireberryClientSDK;
