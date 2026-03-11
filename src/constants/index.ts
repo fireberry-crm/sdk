@@ -20,16 +20,16 @@ export const REQUEST_ACTIONS = {
 
 export const TIMEOUT_DURATION = 60000; // one minute;
 
-export const AppSubscriptionBillingCyclePlan = {
-  Annual: 1,
-  Monthly: 2,
+export const APP_SUBSCRIPTION_BILLING_CYCLE_PLAN = {
+  annual: 1,
+  monthly: 2,
 } as const;
 
-export const AppSubscriptionStatus = {
-  Active: 1,
-  Inactive: 2,
-  ChargeError: 3,
-  BlockedPayment: 4,
-  Trial: 5,
-  TrialExpired: 6,
+export const APP_SUBSCRIPTION_STATUS = {
+  active: 1,
+  inactive: 2,
+  chargeError: 3,
+  blockedPayment: 4,
+  trial: 5,
+  trialExpired: 6,
 } as const;
