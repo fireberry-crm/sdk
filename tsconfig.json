@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["ES2017", "DOM"],
+    "lib": [
+      "ES2017",
+      "DOM"
+    ],
     "module": "ESNext",
     "rootDir": "src",
     "outDir": "./dist/esm",
@@ -18,16 +21,26 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "removeComments": true,
+    "removeComments": false,
     "noImplicitAny": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "baseUrl": "./",
     "paths": {
-      "*": ["*"]
+      "*": [
+        "*"
+      ]
     },
-    "typeRoots": ["@types", "./node_modules/@types"]
+    "typeRoots": [
+      "@types",
+      "./node_modules/@types"
+    ]
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
