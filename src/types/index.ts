@@ -1,5 +1,6 @@
 import { FIELD_TYPES, MESSAGE_TYPES, REQUEST_ACTIONS } from '../constants';
 import { Context } from '../context';
+import { Objects } from './objects';
 
 export type Response = Partial<BusinessObject> & Partial<Context>;
 export type Data = Partial<BusinessObject> & { requestId?: string };
@@ -119,9 +120,16 @@ type RegularFieldMeta = FieldMetaBase & {
 
 export type FieldMeta = LookUpFieldMeta | PicklistFieldMeta | RegularFieldMeta;
 
+export type ObjectMeta = {
+  type: number;
+  name: string;
+  pluralName: string;
+};
+
 export interface MetadataAPI {
-  getFields: (objectType: string | number) => Promise<string[]>;
-  getField: (objectType: string | number, fieldName: string) => Promise<FieldMeta>;
+  getFields: (objectType: ObjectType) => Promise<string[]>;
+  getField: (objectType: ObjectType, fieldName: string) => Promise<FieldMeta>;
+  getObjects: () => Promise<ObjectMeta[]>;
 }
 
 export type JsonPrimitive = string | number | boolean | null;
@@ -135,16 +143,16 @@ export interface SettingsAPI<TSettings = JsonValue> {
 }
 
 export interface API<TData extends Response> {
-  query: (objectType: string | number, payload: QueryPayload) => Promise<ResponseData<TData>>;
-  create: <T extends Payload>(
-    objectType: string | number,
-    payload: T
-  ) => Promise<ResponseData<TData>>;
-  delete: (objectType: string | number, recordId: string) => Promise<ResponseData<TData>>;
+  query: (objectType: ObjectType, payload: QueryPayload) => Promise<ResponseData<TData>>;
+  create: <T extends Payload>(objectType: ObjectType, payload: T) => Promise<ResponseData<TData>>;
+  delete: (objectType: ObjectType, recordId: string) => Promise<ResponseData<TData>>;
   update: <T extends Payload>(
-    objectType: string | number,
+    objectType: ObjectType,
     recordId: string,
     payload: T
   ) => Promise<ResponseData<TData>>;
   metadata: MetadataAPI;
 }
+
+export type ObjectType = Objects[keyof Objects] | string | (number & {});
+export { Objects } from './objects';

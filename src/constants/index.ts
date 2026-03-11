@@ -1,3 +1,5 @@
+import { Objects } from '../types/objects';
+
 export const MESSAGE_TYPES = {
   RESPONSE: 'RESPONSE',
   REQUEST: 'REQUEST',
@@ -18,6 +20,7 @@ export const REQUEST_ACTIONS = {
   UPDATE_SETTINGS: 'UPDATE_SETTINGS',
   GET_METADATA_FIELDS: 'GET_METADATA_FIELDS',
   GET_METADATA_FIELD: 'GET_METADATA_FIELD',
+  GET_METADATA_OBJECTS: 'GET_METADATA_OBJECTS',
 } as const;
 
 export const FIELD_TYPES = [
@@ -37,3 +40,31 @@ export const FIELD_TYPES = [
 ] as const;
 
 export const TIMEOUT_DURATION = 60000; // one minute;
+
+export const OBJECTS = {
+  account: 1,
+  contact: 2,
+  opportunity: 4,
+  cases: 5,
+  activity: 6,
+  competitor: 8,
+  user: 9,
+  task: 10,
+  order: 13,
+  product: 14,
+  orderItem: 17,
+  businessUnits: 23,
+  contract: 28,
+  accountProduct: 33,
+  project: 46,
+  campaign: 67,
+  articles: 76,
+  callLog: 100,
+  attendanceClock: 101,
+  activityLog: 102,
+  conversation: 104,
+  textTemplate: 106,
+  smsTemplate: 110,
+  resources: 114,
+  profile: 116,
+} as const satisfies Objects;
