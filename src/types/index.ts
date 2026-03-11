@@ -1,4 +1,4 @@
-import { MESSAGE_TYPES, REQUEST_ACTIONS } from '../constants';
+import { FIELD_TYPES, MESSAGE_TYPES, REQUEST_ACTIONS } from '../constants';
 import { Context } from '../context';
 
 export type Response = Partial<BusinessObject> & Partial<Context>;
@@ -89,6 +89,41 @@ export type CallbarPayload = {
   placement: 'bottom-start' | 'bottom-end';
 };
 
+export type FieldType = (typeof FIELD_TYPES)[number];
+
+export type PicklistOption = {
+  value: number;
+  textValue: string;
+  order: number;
+};
+
+type FieldMetaBase = {
+  name: string;
+  label: string;
+  readonly: boolean;
+};
+
+type LookUpFieldMeta = FieldMetaBase & {
+  type: 'lookUp';
+  relatedObjectType: number;
+};
+
+type PicklistFieldMeta = FieldMetaBase & {
+  type: 'picklist';
+  options: PicklistOption[];
+};
+
+type RegularFieldMeta = FieldMetaBase & {
+  type: Exclude<FieldType, 'lookUp' | 'picklist'>;
+};
+
+export type FieldMeta = LookUpFieldMeta | PicklistFieldMeta | RegularFieldMeta;
+
+export interface MetadataAPI {
+  getFields: (objectType: string | number) => Promise<string[]>;
+  getField: (objectType: string | number, fieldName: string) => Promise<FieldMeta>;
+}
+
 export type JsonPrimitive = string | number | boolean | null;
 export type JsonObject = { [key: string]: JsonValue };
 export type JsonArray = JsonValue[];
@@ -111,4 +146,5 @@ export interface API<TData extends Response> {
     recordId: string,
     payload: T
   ) => Promise<ResponseData<TData>>;
+  metadata: MetadataAPI;
 }
