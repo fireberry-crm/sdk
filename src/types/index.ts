@@ -1,6 +1,6 @@
 import {
-  AppSubscriptionBillingCyclePlan,
-  AppSubscriptionStatus,
+  APP_SUBSCRIPTION_BILLING_CYCLE_PLAN,
+  APP_SUBSCRIPTION_STATUS,
   MESSAGE_TYPES,
   REQUEST_ACTIONS,
 } from '../constants';
@@ -36,10 +36,10 @@ export type UserDetails = Partial<{
 }>;
 
 export type AppSubscriptionBillingCyclePlanValues =
-  (typeof AppSubscriptionBillingCyclePlan)[keyof typeof AppSubscriptionBillingCyclePlan];
+  (typeof APP_SUBSCRIPTION_BILLING_CYCLE_PLAN)[keyof typeof APP_SUBSCRIPTION_BILLING_CYCLE_PLAN];
 
 export type AppSubscriptionStatusValues =
-  (typeof AppSubscriptionStatus)[keyof typeof AppSubscriptionStatus];
+  (typeof APP_SUBSCRIPTION_STATUS)[keyof typeof APP_SUBSCRIPTION_STATUS];
 
 export type LicenseDetails = {
   licenseLevel: number;

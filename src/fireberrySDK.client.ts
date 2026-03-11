@@ -218,6 +218,6 @@ export type {
   SettingsAPI,
 } from './types';
 
-export { AppSubscriptionBillingCyclePlan, AppSubscriptionStatus } from './constants';
+export { APP_SUBSCRIPTION_BILLING_CYCLE_PLAN, APP_SUBSCRIPTION_STATUS } from './constants';
 
 export default FireberryClientSDK;
