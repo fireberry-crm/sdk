@@ -155,7 +155,7 @@ export type ObjectMeta = {
 export type ObjectPermission = {
   create: boolean;
   read: boolean;
-  write: boolean;
+  update: boolean;
   delete: boolean;
 };
 
