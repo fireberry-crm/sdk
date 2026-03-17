@@ -24,6 +24,7 @@ import type {
   ToastPayload,
   UserDetails,
 } from './types';
+import { EventListener, SystemEventName } from './types/events';
 
 export class FireberryClientSDK<
   TData extends Response,
@@ -92,6 +93,8 @@ export class FireberryClientSDK<
         show: this.showToast.bind(this),
         hide: this.hideToast.bind(this),
       },
+      on: this.on.bind(this),
+      off: this.off.bind(this),
     };
   }
 
@@ -333,6 +336,17 @@ export class FireberryClientSDK<
       file,
     });
     return response.data as unknown as { url: string; id: string };
+  }
+
+  private on(event: SystemEventName, listener: EventListener<SystemEventName>): void {
+    this.eventListeners.set(event, [...(this.eventListeners.get(event) || []), listener]);
+  }
+
+  private off(event: SystemEventName, listener: EventListener<SystemEventName>): void {
+    this.eventListeners.set(
+      event,
+      (this.eventListeners.get(event) || []).filter((l) => l !== listener)
+    );
   }
 }
 

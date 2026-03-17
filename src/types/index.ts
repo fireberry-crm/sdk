@@ -79,7 +79,7 @@ export type BusinessObject = {
 };
 
 export type ResponseData<T extends Response> = {
-  type?: MessageType;
+  type?: Exclude<MessageType, typeof MESSAGE_TYPES.EVENT>;
   success: boolean;
   data: T & Data;
   error?: ResponseError;

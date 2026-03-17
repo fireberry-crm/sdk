@@ -3,6 +3,7 @@ export const MESSAGE_TYPES = {
   REQUEST: 'REQUEST',
   REQUEST_CONTEXT: 'REQUEST_CONTEXT',
   LOG: 'LOG',
+  EVENT: 'EVENT',
 } as const;
 
 export const REQUEST_ACTIONS = {

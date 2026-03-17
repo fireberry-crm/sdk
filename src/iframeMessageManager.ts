@@ -1,5 +1,6 @@
 import { MESSAGE_TYPES, TIMEOUT_DURATION } from './constants';
 import { MessagePayload, Response, ResponseData } from './types';
+import { EventListener, EventMessage, SystemEventName } from './types/events';
 
 export class IframeMessageManager<TData extends Response> {
   private requestIdCounter: number = 0;
@@ -11,6 +12,11 @@ export class IframeMessageManager<TData extends Response> {
       reject: (reason: any) => void;
     }
   > = new Map();
+
+  protected eventListeners: Map<SystemEventName, EventListener<SystemEventName>[]> = new Map<
+    SystemEventName,
+    EventListener<SystemEventName>[]
+  >();
 
   constructor() {
     this.listen();
@@ -65,34 +71,32 @@ export class IframeMessageManager<TData extends Response> {
     });
   }
 
-  private handleMessage(event: MessageEvent<ResponseData<TData>>): void {
+  private handleMessage(
+    event: MessageEvent<ResponseData<TData> | EventMessage<SystemEventName>>
+  ): void {
     const { data: payload } = event;
 
     if (!payload || typeof payload !== 'object' || !payload.type) {
       return;
     }
 
-    const { type, requestId } = payload;
+    const { type } = payload;
 
-    const handlePendingRequest = (
-      requestId: string,
-      callback?: (payload: ResponseData<TData>) => void
-    ) => {
-      if (requestId && this.pendingRequests.has(requestId)) {
-        const { resolve } = this.pendingRequests.get(requestId)!;
-        this.pendingRequests.delete(requestId);
-        resolve(payload);
-      }
-      if (callback) {
-        callback(payload);
-      }
-    };
-
-    // Keep this switch case for further extensions
     switch (type) {
       case MESSAGE_TYPES.RESPONSE:
-        handlePendingRequest(requestId);
+        const { requestId } = payload;
+        if (requestId && this.pendingRequests.has(requestId)) {
+          const { resolve } = this.pendingRequests.get(requestId)!;
+          this.pendingRequests.delete(requestId);
+          resolve(payload);
+        }
         break;
+
+      case MESSAGE_TYPES.EVENT:
+        const { event, data } = payload;
+        this.eventListeners.get(event)?.forEach((listener) => listener(data));
+        break;
+
       default:
         this.logError(`Unknown response type: ${type}`, {
           type,
@@ -113,5 +117,6 @@ export class IframeMessageManager<TData extends Response> {
     });
 
     this.pendingRequests.clear();
+    this.eventListeners.clear();
   }
 }
