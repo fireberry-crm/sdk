@@ -259,5 +259,10 @@ export type GoToRecordPayload = {
   recordId: string;
 };
 
+export type GoToViewPayload = {
+  objectType: ObjectType;
+  viewId?: string;
+};
+
 export type ObjectType = Objects[keyof Objects] | string | (number & {});
 export type { Objects } from './objects';

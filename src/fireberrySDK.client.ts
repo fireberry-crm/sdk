@@ -8,6 +8,7 @@ import type {
   FieldMeta,
   GetFilesResponse,
   GoToRecordPayload,
+  GoToViewPayload,
   JsonValue,
   ObjectMeta,
   ObjectType,
@@ -95,6 +96,7 @@ export class FireberryClientSDK<
         hide: this.hideToast.bind(this),
       },
       goToRecord: this.goToRecord.bind(this),
+      goToView: this.goToView.bind(this),
       on: this.on.bind(this),
       off: this.off.bind(this),
     };
@@ -231,6 +233,21 @@ export class FireberryClientSDK<
       action: REQUEST_ACTIONS.GO_TO_RECORD,
       objectType,
       recordId,
+    });
+  }
+
+  private async goToView(
+    objectType: GoToViewPayload['objectType'],
+    viewId?: GoToViewPayload['viewId']
+  ): Promise<void> {
+    if (objectType === undefined || objectType === null) {
+      throw new Error('objectType is required');
+    }
+    await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GO_TO_VIEW,
+      objectType,
+      ...(viewId !== undefined ? { viewId } : {}),
     });
   }
 
@@ -385,6 +402,7 @@ export type {
   FileMetadata,
   GetFilesResponse,
   GoToRecordPayload,
+  GoToViewPayload,
   JsonValue,
   LicenseDetails,
   MetadataAPI,
