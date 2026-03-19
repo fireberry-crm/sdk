@@ -78,6 +78,12 @@ export class FireberryClientSDK<
     };
   }
 
+  get db() {
+    return {
+      set: this.setDataStorage.bind(this),
+    };
+  }
+
   get system() {
     return {
       callbar: {
@@ -324,6 +330,15 @@ export class FireberryClientSDK<
       file,
     });
     return response.data as unknown as { url: string; id: string };
+  }
+
+  private setDataStorage(key: string, value: JsonValue): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.SET_DATA_STORAGE,
+      key,
+      value,
+    });
   }
 
   private async uploadFileRecord(file: File): Promise<{ url: string; id: string }> {
