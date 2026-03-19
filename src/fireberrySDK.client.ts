@@ -7,6 +7,7 @@ import type {
   CallbarPayload,
   FieldMeta,
   GetFilesResponse,
+  GoToRecordPayload,
   JsonValue,
   ObjectMeta,
   ObjectType,
@@ -93,6 +94,7 @@ export class FireberryClientSDK<
         show: this.showToast.bind(this),
         hide: this.hideToast.bind(this),
       },
+      goToRecord: this.goToRecord.bind(this),
       on: this.on.bind(this),
       off: this.off.bind(this),
     };
@@ -211,6 +213,24 @@ export class FireberryClientSDK<
     return this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.HIDE_TOAST,
+    });
+  }
+
+  private async goToRecord(
+    objectType: GoToRecordPayload['objectType'],
+    recordId: GoToRecordPayload['recordId']
+  ): Promise<void> {
+    if (objectType === undefined || objectType === null) {
+      throw new Error('objectType is required');
+    }
+    if (!recordId) {
+      throw new Error('recordId is required');
+    }
+    await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GO_TO_RECORD,
+      objectType,
+      recordId,
     });
   }
 
@@ -364,6 +384,7 @@ export type {
   FieldType,
   FileMetadata,
   GetFilesResponse,
+  GoToRecordPayload,
   JsonValue,
   LicenseDetails,
   MetadataAPI,
