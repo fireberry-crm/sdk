@@ -81,6 +81,7 @@ export class FireberryClientSDK<
   get db() {
     return {
       set: this.setDataStorage.bind(this),
+      get: this.getDataStorage.bind(this),
     };
   }
 
@@ -330,6 +331,14 @@ export class FireberryClientSDK<
       file,
     });
     return response.data as unknown as { url: string; id: string };
+  }
+
+  private getDataStorage(key: string): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GET_DATA_STORAGE,
+      key,
+    });
   }
 
   private setDataStorage(key: string, value: JsonValue): Promise<ResponseData<TData>> {
