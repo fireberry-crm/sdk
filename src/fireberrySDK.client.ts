@@ -220,7 +220,7 @@ export class FireberryClientSDK<
     objectType: GoToRecordPayload['objectType'],
     recordId: GoToRecordPayload['recordId']
   ): Promise<void> {
-    if (objectType === undefined || objectType === null) {
+    if (!objectType) {
       throw new Error('objectType is required');
     }
     if (!recordId) {
