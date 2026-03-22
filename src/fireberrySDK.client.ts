@@ -82,6 +82,7 @@ export class FireberryClientSDK<
     return {
       set: this.setDataStorage.bind(this),
       get: this.getDataStorage.bind(this),
+      delete: this.deleteDataStorage.bind(this),
     };
   }
 
@@ -337,6 +338,14 @@ export class FireberryClientSDK<
     return this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.GET_DATA_STORAGE,
+      key,
+    });
+  }
+
+  private deleteDataStorage(key: string): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.DELETE_DATA_STORAGE,
       key,
     });
   }
