@@ -254,5 +254,10 @@ export type ToastPayload = {
     | 'bottom-end';
 };
 
+export type GoToRecordPayload = {
+  objectType: ObjectType;
+  recordId: string;
+};
+
 export type ObjectType = Objects[keyof Objects] | string | (number & {});
 export type { Objects } from './objects';
