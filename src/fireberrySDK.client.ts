@@ -334,12 +334,19 @@ export class FireberryClientSDK<
     return response.data as unknown as { url: string; id: string };
   }
 
-  private getDataStorage(key: string): Promise<ResponseData<TData>> {
-    return this.sendMessageWithPromise({
+  private async getDataStorage(
+    key: string
+  ): Promise<{ value: JsonValue; success: boolean; error?: ResponseError }> {
+    const res = await this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.GET_DATA_STORAGE,
       key,
     });
+    return {
+      success: res.success,
+      error: res.error,
+      value: (res.data as unknown as { value: JsonValue }).value,
+    };
   }
 
   private deleteDataStorage(key: string): Promise<ResponseData<TData>> {
