@@ -264,5 +264,15 @@ export type GoToViewPayload = {
   viewId?: string;
 };
 
-export type ObjectType = Objects[keyof Objects] | string | (number & {});
+export type NavigationType = 'VIEW' | 'RECORD' | 'APP' | 'SETTINGS' | 'USER_SETTINGS';
+
+export type NumericObjectType = Objects[keyof Objects] | (number & {});
+export type ObjectType = NumericObjectType | string;
+
+export type NavigationData = {
+  path: string;
+  objectType: NumericObjectType | null;
+  type: NavigationType;
+};
+
 export type { Objects } from './objects';
