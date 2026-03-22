@@ -247,7 +247,7 @@ export class FireberryClientSDK<
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.GO_TO_VIEW,
       objectType,
-      ...(viewId !== undefined ? { viewId } : {}),
+      viewId,
     });
   }
 
