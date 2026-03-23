@@ -1,6 +1,9 @@
 import { MESSAGE_TYPES } from '../constants';
+import type { NavigationData } from './index';
 
-export interface SystemEventMap {}
+export interface SystemEventMap {
+  navigation: NavigationData;
+}
 
 export type SystemEventName = keyof SystemEventMap;
 
