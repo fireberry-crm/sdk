@@ -1,6 +1,7 @@
 import {
   APP_SUBSCRIPTION_BILLING_CYCLE_PLAN,
   APP_SUBSCRIPTION_STATUS,
+  FEATURE_PERMISSIONS,
   FIELD_TYPES,
   MESSAGE_TYPES,
   REQUEST_ACTIONS,
@@ -170,7 +171,9 @@ export type PermissionObjects = {
 };
 
 export type PermissionFeatures = {
-  readonly [feature: string]: FeaturePermission;
+  readonly [K in keyof typeof FEATURE_PERMISSIONS]: FeaturePermission;
+} & {
+  readonly [key: string]: FeaturePermission;
 };
 
 export type PermissionsData = {

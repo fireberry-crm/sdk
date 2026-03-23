@@ -371,6 +371,10 @@ export type {
   ToastPayload,
 } from './types';
 
-export { APP_SUBSCRIPTION_BILLING_CYCLE_PLAN, APP_SUBSCRIPTION_STATUS } from './constants';
+export {
+  APP_SUBSCRIPTION_BILLING_CYCLE_PLAN,
+  APP_SUBSCRIPTION_STATUS,
+  FEATURE_PERMISSIONS,
+} from './constants';
 
 export default FireberryClientSDK;
