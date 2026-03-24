@@ -170,11 +170,9 @@ export type PermissionObjects = {
   readonly [key: number]: ObjectPermission | undefined;
 };
 
-export type PermissionFeatures = {
-  readonly [K in keyof typeof FEATURE_PERMISSIONS]: FeaturePermission;
-} & {
-  readonly [key: string]: FeaturePermission;
-};
+export interface PermissionFeatures
+  extends Record<keyof typeof FEATURE_PERMISSIONS, FeaturePermission>,
+    Record<string, FeaturePermission> {}
 
 export type PermissionsData = {
   objects: PermissionObjects;
