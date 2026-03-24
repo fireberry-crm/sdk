@@ -76,9 +76,9 @@ export class FireberryClientSDK<
 
   private get db() {
     return {
-      set: this.setDataStorage.bind(this),
-      get: this.getDataStorage.bind(this),
-      delete: this.deleteDataStorage.bind(this),
+      setItem: this.setDataStorage.bind(this),
+      getItem: this.getDataStorage.bind(this),
+      deleteItem: this.deleteDataStorage.bind(this),
     };
   }
 
