@@ -96,11 +96,11 @@ export class FireberryClientSDK<
         show: this.showToast.bind(this),
         hide: this.hideToast.bind(this),
       },
-      goToRecord: this.goToRecord.bind(this),
-      goToView: this.goToView.bind(this),
       on: this.on.bind(this),
       off: this.off.bind(this),
       navigation: {
+        goToView: this.goToView.bind(this),
+        goToRecord: this.goToRecord.bind(this),
         get: this.getNavigation.bind(this),
       },
     };
