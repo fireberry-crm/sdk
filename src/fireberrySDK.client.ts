@@ -51,10 +51,13 @@ export class FireberryClientSDK<
   get context(): Context | null {
     return this._context;
   }
+  
   app = {
     settings: this.settings,
     storage: this.storage,
+    db: this.db,
   };
+  
   private get settings(): SettingsAPI<TSettings> {
     return {
       get: this.getSettings.bind(this),
@@ -69,20 +72,20 @@ export class FireberryClientSDK<
       getFiles: this.getFiles.bind(this),
       getFile: this.getFile.bind(this),
     };
+  }  
+
+  private get db() {
+    return {
+      set: this.setDataStorage.bind(this),
+      get: this.getDataStorage.bind(this),
+      delete: this.deleteDataStorage.bind(this),
+    };
   }
 
   private get storageRecord(): StorageRecordAPI {
     return {
       uploadFile: this.uploadFileRecord.bind(this),
       getFiles: this.getRecordFiles.bind(this),
-    };
-  }
-
-  get db() {
-    return {
-      set: this.setDataStorage.bind(this),
-      get: this.getDataStorage.bind(this),
-      delete: this.deleteDataStorage.bind(this),
     };
   }
 
