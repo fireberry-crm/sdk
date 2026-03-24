@@ -83,7 +83,7 @@ export class IframeMessageManager<TData extends Response> {
     const { type } = payload;
 
     switch (type) {
-      case MESSAGE_TYPES.RESPONSE:
+      case MESSAGE_TYPES.RESPONSE: {
         const { requestId } = payload;
         if (requestId && this.pendingRequests.has(requestId)) {
           const { resolve } = this.pendingRequests.get(requestId)!;
@@ -91,11 +91,13 @@ export class IframeMessageManager<TData extends Response> {
           resolve(payload);
         }
         break;
+      }
 
-      case MESSAGE_TYPES.EVENT:
+      case MESSAGE_TYPES.EVENT: {
         const { event, data } = payload;
         this.eventListeners.get(event)?.forEach((listener) => listener(data));
         break;
+      }
 
       default:
         this.logError(`Unknown response type: ${type}`, {

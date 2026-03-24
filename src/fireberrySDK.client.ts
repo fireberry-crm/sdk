@@ -323,6 +323,7 @@ export class FireberryClientSDK<
       objectType,
       fieldName,
     });
+
     return (data as unknown as { field: FieldMeta }).field;
   }
 
@@ -387,11 +388,14 @@ export class FireberryClientSDK<
     return response.data as unknown as { url: string; id: string };
   }
 
-  private on(event: SystemEventName, listener: EventListener<SystemEventName>): void {
-    this.eventListeners.set(event, [...(this.eventListeners.get(event) || []), listener]);
+  private on<K extends SystemEventName>(event: K, listener: EventListener<K>): void {
+    this.eventListeners.set(event, [
+      ...(this.eventListeners.get(event) || []),
+      listener as EventListener<SystemEventName>,
+    ]);
   }
 
-  private off(event: SystemEventName, listener: EventListener<SystemEventName>): void {
+  private off<K extends SystemEventName>(event: K, listener: EventListener<K>): void {
     this.eventListeners.set(
       event,
       (this.eventListeners.get(event) || []).filter((l) => l !== listener)
