@@ -10,6 +10,7 @@ import type {
   GoToRecordPayload,
   GoToViewPayload,
   JsonValue,
+  NavigationData,
   ObjectMeta,
   ObjectType,
   PaginationPayload,
@@ -99,6 +100,9 @@ export class FireberryClientSDK<
       goToView: this.goToView.bind(this),
       on: this.on.bind(this),
       off: this.off.bind(this),
+      navigation: {
+        get: this.getNavigation.bind(this),
+      },
     };
   }
 
@@ -249,6 +253,14 @@ export class FireberryClientSDK<
       objectType,
       viewId,
     });
+  }
+
+  private async getNavigation(): Promise<NavigationData> {
+    const { data } = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GET_NAVIGATION,
+    });
+    return (data as unknown as { navigation: NavigationData }).navigation;
   }
 
   private query(objectType: ObjectType, payload: QueryPayload): Promise<ResponseData<TData>> {
@@ -406,6 +418,9 @@ export type {
   JsonValue,
   LicenseDetails,
   MetadataAPI,
+  NavigationData,
+  NavigationType,
+  NumericObjectType,
   ObjectMeta,
   ObjectPermission,
   Objects,
