@@ -88,3 +88,23 @@ export const OBJECTS = {
   resources: 114,
   profile: 116,
 } as const;
+
+export const FEATURE_PERMISSIONS = {
+  changeFields: 'changefields',
+  exportExel: 'exportexel',
+  mergeRecords: 'mergerecords',
+  settings: 'settings',
+  eSignature: 'esignature',
+  importExel: 'importexel',
+  sendSms: 'sendsms',
+  allocateRecords: 'allocaterecords',
+  billing: 'billing',
+  accounting: 'accounting',
+  passwordRules: 'passwordrules',
+  sendToDialer: 'sendtodialer',
+  webServices: 'webservices',
+  sendWhatsApp: 'sendWhatsApp',
+  sendEmail: 'pcfSendEmailCode',
+  customDomains: 'customDomains',
+  partnerAccess: 'partnerAccess',
+} as const;

@@ -1,6 +1,7 @@
 import {
   APP_SUBSCRIPTION_BILLING_CYCLE_PLAN,
   APP_SUBSCRIPTION_STATUS,
+  FEATURE_PERMISSIONS,
   FIELD_TYPES,
   MESSAGE_TYPES,
   REQUEST_ACTIONS,
@@ -169,9 +170,9 @@ export type PermissionObjects = {
   readonly [key: number]: ObjectPermission | undefined;
 };
 
-export type PermissionFeatures = {
-  readonly [feature: string]: FeaturePermission;
-};
+export interface PermissionFeatures
+  extends Record<keyof typeof FEATURE_PERMISSIONS, FeaturePermission>,
+    Record<string, FeaturePermission> {}
 
 export type PermissionsData = {
   objects: PermissionObjects;
