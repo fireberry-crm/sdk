@@ -13,7 +13,7 @@ A lightweight TypeScript SDK for integrating with the Fireberry platform, provid
 ## Installation
 
 ```bash
-npm install @fireberry/sdk
+npm install @fireberry/sdk@latest
 ```
 
 ## Quick Start
