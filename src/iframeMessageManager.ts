@@ -86,9 +86,13 @@ export class IframeMessageManager<TData extends Response> {
       case MESSAGE_TYPES.RESPONSE: {
         const { requestId } = payload;
         if (requestId && this.pendingRequests.has(requestId)) {
-          const { resolve } = this.pendingRequests.get(requestId)!;
+          const { resolve, reject } = this.pendingRequests.get(requestId)!;
           this.pendingRequests.delete(requestId);
-          resolve(payload);
+          if (payload.success === false) {
+            reject(payload.error ?? new Error('Request failed'));
+          } else {
+            resolve(payload);
+          }
         }
         break;
       }
