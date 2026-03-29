@@ -229,7 +229,7 @@ export class FireberryClientSDK<
     if (!objectType) {
       throw new Error('objectType is required');
     }
-    if (!recordId) {
+    if (!recordId?.trim()) {
       throw new Error('recordId is required');
     }
     await this.sendMessageWithPromise({
