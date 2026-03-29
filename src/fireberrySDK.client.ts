@@ -55,10 +55,13 @@ export class FireberryClientSDK<
   get context(): Context | null {
     return this._context;
   }
+
   app = {
     settings: this.settings,
     storage: this.storage,
+    db: this.db,
   };
+
   private get settings(): SettingsAPI<TSettings> {
     return {
       get: this.getSettings.bind(this),
@@ -72,6 +75,14 @@ export class FireberryClientSDK<
       deleteFile: this.deleteFile.bind(this),
       getFiles: this.getFiles.bind(this),
       getFile: this.getFile.bind(this),
+    };
+  }
+
+  private get db() {
+    return {
+      setItem: this.setDataStorage.bind(this),
+      getItem: this.getDataStorage.bind(this),
+      deleteItem: this.deleteDataStorage.bind(this),
     };
   }
 
@@ -377,6 +388,38 @@ export class FireberryClientSDK<
       file,
     });
     return response.data as unknown as { url: string; id: string };
+  }
+
+  private async getDataStorage(
+    key: string
+  ): Promise<{ value: JsonValue; success: boolean; error?: ResponseError }> {
+    const res = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GET_DATA_STORAGE,
+      key,
+    });
+    return {
+      success: res.success,
+      error: res.error,
+      value: (res.data as unknown as { value: JsonValue })?.value,
+    };
+  }
+
+  private deleteDataStorage(key: string): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.DELETE_DATA_STORAGE,
+      key,
+    });
+  }
+
+  private setDataStorage(key: string, value: JsonValue): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.SET_DATA_STORAGE,
+      key,
+      value,
+    });
   }
 
   private async uploadFileRecord(file: File): Promise<{ url: string; id: string }> {
