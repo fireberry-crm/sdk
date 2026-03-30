@@ -79,7 +79,7 @@ export type BusinessObject = {
 };
 
 export type ResponseData<T extends Response> = {
-  type?: MessageType;
+  type?: Exclude<MessageType, typeof MESSAGE_TYPES.EVENT>;
   success: boolean;
   data: T & Data;
   error?: ResponseError;
@@ -254,5 +254,25 @@ export type ToastPayload = {
     | 'bottom-end';
 };
 
-export type ObjectType = Objects[keyof Objects] | string | (number & {});
+export type GoToRecordPayload = {
+  objectType: ObjectType;
+  recordId: string;
+};
+
+export type GoToViewPayload = {
+  objectType: ObjectType;
+  viewId?: string;
+};
+
+export type NavigationType = 'VIEW' | 'RECORD' | 'APP' | 'SETTINGS' | 'USER_SETTINGS';
+
+export type NumericObjectType = Objects[keyof Objects] | (number & {});
+export type ObjectType = NumericObjectType | string;
+
+export type NavigationData = {
+  path: string;
+  objectType: NumericObjectType | null;
+  type: NavigationType;
+};
+
 export type { Objects } from './objects';

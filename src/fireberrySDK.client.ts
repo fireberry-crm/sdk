@@ -7,7 +7,10 @@ import type {
   CallbarPayload,
   FieldMeta,
   GetFilesResponse,
+  GoToRecordPayload,
+  GoToViewPayload,
   JsonValue,
+  NavigationData,
   ObjectMeta,
   ObjectType,
   PaginationPayload,
@@ -24,6 +27,7 @@ import type {
   ToastPayload,
   UserDetails,
 } from './types';
+import { EventListener, SystemEventName } from './types/events';
 
 export class FireberryClientSDK<
   TData extends Response,
@@ -102,6 +106,13 @@ export class FireberryClientSDK<
       toast: {
         show: this.showToast.bind(this),
         hide: this.hideToast.bind(this),
+      },
+      on: this.on.bind(this),
+      off: this.off.bind(this),
+      navigation: {
+        goToView: this.goToView.bind(this),
+        goToRecord: this.goToRecord.bind(this),
+        get: this.getNavigation.bind(this),
       },
     };
   }
@@ -222,6 +233,47 @@ export class FireberryClientSDK<
     });
   }
 
+  private async goToRecord(
+    objectType: GoToRecordPayload['objectType'],
+    recordId: GoToRecordPayload['recordId']
+  ): Promise<void> {
+    if (!objectType) {
+      throw new Error('objectType is required');
+    }
+    if (!recordId?.trim()) {
+      throw new Error('recordId is required');
+    }
+    await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GO_TO_RECORD,
+      objectType,
+      recordId,
+    });
+  }
+
+  private async goToView(
+    objectType: GoToViewPayload['objectType'],
+    viewId?: GoToViewPayload['viewId']
+  ): Promise<void> {
+    if (objectType === undefined || objectType === null) {
+      throw new Error('objectType is required');
+    }
+    await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GO_TO_VIEW,
+      objectType,
+      viewId,
+    });
+  }
+
+  private async getNavigation(): Promise<NavigationData> {
+    const { data } = await this.sendMessageWithPromise({
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.GET_NAVIGATION,
+    });
+    return (data as unknown as { navigation: NavigationData }).navigation;
+  }
+
   private query(objectType: ObjectType, payload: QueryPayload): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
@@ -282,6 +334,7 @@ export class FireberryClientSDK<
       objectType,
       fieldName,
     });
+
     return (data as unknown as { field: FieldMeta }).field;
   }
 
@@ -377,6 +430,20 @@ export class FireberryClientSDK<
     });
     return response.data as unknown as { url: string; id: string };
   }
+
+  private on<K extends SystemEventName>(event: K, listener: EventListener<K>): void {
+    this.eventListeners.set(event, [
+      ...(this.eventListeners.get(event) || []),
+      listener as EventListener<SystemEventName>,
+    ]);
+  }
+
+  private off<K extends SystemEventName>(event: K, listener: EventListener<K>): void {
+    this.eventListeners.set(
+      event,
+      (this.eventListeners.get(event) || []).filter((l) => l !== listener)
+    );
+  }
 }
 
 export { FIELD_TYPES, OBJECTS } from './constants';
@@ -393,9 +460,14 @@ export type {
   FieldType,
   FileMetadata,
   GetFilesResponse,
+  GoToRecordPayload,
+  GoToViewPayload,
   JsonValue,
   LicenseDetails,
   MetadataAPI,
+  NavigationData,
+  NavigationType,
+  NumericObjectType,
   ObjectMeta,
   ObjectPermission,
   Objects,
