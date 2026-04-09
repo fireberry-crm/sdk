@@ -1,8 +1,13 @@
 import { MESSAGE_TYPES } from '../constants';
 import type { NavigationData } from './index';
 
+export interface SideMenuData {
+  isOpen: boolean;
+}
+
 export interface SystemEventMap {
   navigation: NavigationData;
+  'side-menu': SideMenuData;
 }
 
 export type SystemEventName = keyof SystemEventMap;

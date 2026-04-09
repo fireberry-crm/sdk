@@ -448,6 +448,8 @@ export class FireberryClientSDK<
 
 export { FIELD_TYPES, OBJECTS } from './constants';
 
+export type { SideMenuData } from './types/events';
+
 export type {
   AppSubscriptionBillingCyclePlanValues,
   AppSubscriptionStatusValues,
