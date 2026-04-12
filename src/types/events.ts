@@ -7,7 +7,7 @@ export interface SideMenuData {
 
 export interface SystemEventMap {
   navigation: NavigationData;
-  'side-menu': SideMenuData;
+  'side-menu-state': SideMenuData;
 }
 
 export type SystemEventName = keyof SystemEventMap;
