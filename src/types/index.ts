@@ -1,8 +1,10 @@
 import {
+  AGGREGATIONS,
   APP_SUBSCRIPTION_BILLING_CYCLE_PLAN,
   APP_SUBSCRIPTION_STATUS,
   FIELD_TYPES,
   MESSAGE_TYPES,
+  OPERATORS,
   REQUEST_ACTIONS,
 } from '../constants';
 import { Context } from '../context';
@@ -92,6 +94,53 @@ export type QueryPayload = {
   query: string;
   page_size?: number;
   page_number?: number;
+};
+
+export type AggregationFunction = (typeof AGGREGATIONS)[keyof typeof AGGREGATIONS];
+
+export type QueryV3Field = {
+  name: string;
+  alias?: string;
+  aggrFunc?: AggregationFunction;
+};
+
+export type QueryV3ConditionOperator = (typeof OPERATORS)[keyof typeof OPERATORS];
+
+export type QueryV3Condition = {
+  fieldName: string;
+  operator: QueryV3ConditionOperator;
+  value?: string | number | boolean | (string | number)[];
+};
+
+export type QueryV3ConditionGroup = {
+  type: 'AND' | 'OR';
+  conditions: QueryV3Condition[];
+};
+
+export type QueryV3OrderBy = {
+  name: string;
+  order?: 'asc' | 'desc';
+};
+
+export type QueryV3GroupBy = {
+  name: string;
+};
+
+export type QueryV3Payload = {
+  objectType: number;
+  fields: QueryV3Field[];
+  filter?: QueryV3ConditionGroup[];
+  orderBy?: QueryV3OrderBy[];
+  groupBy?: QueryV3GroupBy[];
+  pageSize?: number;
+  pageNumber?: number;
+};
+
+export type QueryV3Response = {
+  data: Record<string, unknown>[];
+  pageNumber: number;
+  pageSize: number;
+  isLastPage: boolean;
 };
 
 export type BadgeType = 'success' | 'warning' | 'error' | 'info';
@@ -204,6 +253,9 @@ export interface API<TData extends Response> {
     payload: T
   ) => Promise<ResponseData<TData>>;
   metadata: MetadataAPI;
+  v3: {
+    query: (payload: QueryV3Payload) => Promise<ResponseData<TData>>;
+  };
 }
 
 export type FileMetadata = {

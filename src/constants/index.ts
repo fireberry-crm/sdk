@@ -13,6 +13,7 @@ export const REQUEST_ACTIONS = {
   DELETE: 'DELETE',
   UPDATE: 'UPDATE',
   QUERY: 'QUERY',
+  QUERY_V3: 'QUERY_V3',
   SHOW_BADGE: 'SHOW_BADGE',
   HIDE_BADGE: 'HIDE_BADGE',
   GET_SETTINGS: 'GET_SETTINGS',
@@ -94,4 +95,28 @@ export const OBJECTS = {
   smsTemplate: 110,
   resources: 114,
   profile: 116,
+} as const;
+
+export const OPERATORS = {
+  equal: 'eq',
+  notEqual: 'ne',
+  lessThan: 'lt',
+  greaterThan: 'gt',
+  lessOrEqual: 'le',
+  greaterOrEqual: 'ge',
+  startsWith: 'start-with',
+  notStartsWith: 'not-start-with',
+  isNull: 'is-null',
+  isNotNull: 'is-not-null',
+  in: 'eq-in',
+  notIn: 'not-in',
+  between: 'between',
+  currentUser: 'userid',
+} as const;
+
+export const AGGREGATIONS = {
+  sum: 'SUM',
+  count: 'COUNT',
+  min: 'MIN',
+  max: 'MAX',
 } as const;

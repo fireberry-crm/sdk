@@ -17,6 +17,7 @@ import type {
   Payload,
   PermissionsData,
   QueryPayload,
+  QueryV3Payload,
   RecordDetails,
   Response,
   ResponseData,
@@ -48,6 +49,9 @@ export class FireberryClientSDK<
         getFields: this.getMetadataFields.bind(this),
         getField: this.getMetadataField.bind(this),
         getObjects: this.getMetadataObjects.bind(this),
+      },
+      v3: {
+        query: this.queryV3.bind(this),
       },
     };
   }
@@ -274,6 +278,14 @@ export class FireberryClientSDK<
     return (data as unknown as { navigation: NavigationData }).navigation;
   }
 
+  private queryV3(payload: QueryV3Payload): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      ...payload,
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.QUERY_V3,
+    });
+  }
+
   private query(objectType: ObjectType, payload: QueryPayload): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
@@ -446,7 +458,7 @@ export class FireberryClientSDK<
   }
 }
 
-export { FIELD_TYPES, OBJECTS } from './constants';
+export { FIELD_TYPES, OBJECTS, OPERATORS, AGGREGATIONS } from './constants';
 
 export type {
   AppSubscriptionBillingCyclePlanValues,
@@ -478,6 +490,15 @@ export type {
   PermissionsData,
   PicklistOption,
   QueryPayload,
+  QueryV3Payload,
+  QueryV3Field,
+  QueryV3Condition,
+  QueryV3ConditionGroup,
+  QueryV3ConditionOperator,
+  QueryV3OrderBy,
+  QueryV3GroupBy,
+  QueryV3Response,
+  AggregationFunction,
   ResponseData,
   ResponseError,
   SettingsAPI,
