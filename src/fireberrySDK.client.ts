@@ -458,12 +458,16 @@ export class FireberryClientSDK<
   }
 }
 
-export { FIELD_TYPES, OBJECTS, OPERATORS, AGGREGATIONS } from './constants';
+export { AGGREGATIONS, FIELD_TYPES, OBJECTS, OPERATORS } from './constants';
 
 export type {
+  AggregatedField,
+  AggregationFunction,
   AppSubscriptionBillingCyclePlanValues,
   AppSubscriptionStatusValues,
+  ArrayOperator,
   BadgePayload,
+  BetweenOperator,
   BusinessObject,
   CallbarPayload,
   Data,
@@ -479,6 +483,7 @@ export type {
   MetadataAPI,
   NavigationData,
   NavigationType,
+  NoValueOperator,
   NumericObjectType,
   ObjectMeta,
   ObjectPermission,
@@ -489,24 +494,23 @@ export type {
   PermissionObjects,
   PermissionsData,
   PicklistOption,
-  QueryPayload,
-  QueryV3Payload,
-  QueryV3Field,
   PlainField,
-  AggregatedField,
+  QueryPayload,
   QueryV3Condition,
   QueryV3ConditionGroup,
   QueryV3ConditionOperator,
-  QueryV3OrderBy,
+  QueryV3Field,
   QueryV3GroupBy,
+  QueryV3OrderBy,
+  QueryV3Payload,
   QueryV3Response,
-  AggregationFunction,
   ResponseData,
   ResponseError,
   SettingsAPI,
   StorageAPI,
   StorageRecordAPI,
   ToastPayload,
+  ValueOperator,
 } from './types';
 
 export { APP_SUBSCRIPTION_BILLING_CYCLE_PLAN, APP_SUBSCRIPTION_STATUS } from './constants';

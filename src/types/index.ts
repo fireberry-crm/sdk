@@ -100,27 +100,38 @@ export type AggregationFunction = (typeof AGGREGATIONS)[keyof typeof AGGREGATION
 
 export type QueryV3ConditionOperator = (typeof OPERATORS)[keyof typeof OPERATORS];
 
+export type NoValueOperator = Extract<
+  QueryV3ConditionOperator,
+  'is-null' | 'is-not-null' | 'userid'
+>;
+export type ArrayOperator = Extract<QueryV3ConditionOperator, 'eq-in' | 'not-in'>;
+export type BetweenOperator = Extract<QueryV3ConditionOperator, 'between'>;
+export type ValueOperator = Extract<
+  QueryV3ConditionOperator,
+  'eq' | 'ne' | 'lt' | 'gt' | 'le' | 'ge' | 'start-with' | 'not-start-with'
+>;
+
 type QueryV3ValueCondition = {
   fieldName: string;
-  operator: 'eq' | 'ne' | 'lt' | 'gt' | 'le' | 'ge' | 'start-with' | 'not-start-with';
+  operator: ValueOperator;
   value: string | number | boolean;
 };
 
 type QueryV3ArrayCondition = {
   fieldName: string;
-  operator: 'eq-in' | 'not-in';
+  operator: ArrayOperator;
   value: (string | number)[];
 };
 
 type QueryV3BetweenCondition = {
   fieldName: string;
-  operator: 'between';
+  operator: BetweenOperator;
   value: [string | number, string | number];
 };
 
 type QueryV3NoValueCondition = {
   fieldName: string;
-  operator: 'is-null' | 'is-not-null' | 'userid';
+  operator: NoValueOperator;
 };
 
 export type QueryV3Condition =
