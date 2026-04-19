@@ -98,24 +98,53 @@ export type QueryPayload = {
 
 export type AggregationFunction = (typeof AGGREGATIONS)[keyof typeof AGGREGATIONS];
 
-export type QueryV3Field = {
-  name: string;
-  alias?: string;
-  aggrFunc?: AggregationFunction;
-};
-
 export type QueryV3ConditionOperator = (typeof OPERATORS)[keyof typeof OPERATORS];
 
-export type QueryV3Condition = {
+type QueryV3ValueCondition = {
   fieldName: string;
-  operator: QueryV3ConditionOperator;
-  value?: string | number | boolean | (string | number)[];
+  operator: 'eq' | 'ne' | 'lt' | 'gt' | 'le' | 'ge' | 'start-with' | 'not-start-with';
+  value: string | number | boolean;
 };
+
+type QueryV3ArrayCondition = {
+  fieldName: string;
+  operator: 'eq-in' | 'not-in';
+  value: (string | number)[];
+};
+
+type QueryV3BetweenCondition = {
+  fieldName: string;
+  operator: 'between';
+  value: [string | number, string | number];
+};
+
+type QueryV3NoValueCondition = {
+  fieldName: string;
+  operator: 'is-null' | 'is-not-null' | 'userid';
+};
+
+export type QueryV3Condition =
+  | QueryV3ValueCondition
+  | QueryV3ArrayCondition
+  | QueryV3BetweenCondition
+  | QueryV3NoValueCondition;
 
 export type QueryV3ConditionGroup = {
   type: 'AND' | 'OR';
   conditions: QueryV3Condition[];
 };
+
+export type PlainField = {
+  name: string;
+};
+
+export type AggregatedField = {
+  name: string;
+  aggrFunc: AggregationFunction;
+  alias?: string;
+};
+
+export type QueryV3Field = PlainField | AggregatedField;
 
 export type QueryV3OrderBy = {
   name: string;
@@ -126,15 +155,25 @@ export type QueryV3GroupBy = {
   name: string;
 };
 
-export type QueryV3Payload = {
+type QueryV3BasePayload = {
   objectType: number;
-  fields: QueryV3Field[];
   filter?: QueryV3ConditionGroup[];
   orderBy?: QueryV3OrderBy[];
-  groupBy?: QueryV3GroupBy[];
   pageSize?: number;
   pageNumber?: number;
 };
+
+type SimpleQueryPayload = QueryV3BasePayload & {
+  fields: PlainField[];
+  groupBy?: never;
+};
+
+type AggregationQueryPayload = QueryV3BasePayload & {
+  fields: (PlainField | AggregatedField)[];
+  groupBy: QueryV3GroupBy[];
+};
+
+export type QueryV3Payload = SimpleQueryPayload | AggregationQueryPayload;
 
 export type QueryV3Response = {
   data: Record<string, unknown>[];

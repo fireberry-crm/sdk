@@ -492,6 +492,8 @@ export type {
   QueryPayload,
   QueryV3Payload,
   QueryV3Field,
+  PlainField,
+  AggregatedField,
   QueryV3Condition,
   QueryV3ConditionGroup,
   QueryV3ConditionOperator,
