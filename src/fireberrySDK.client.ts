@@ -17,6 +17,7 @@ import type {
   Payload,
   PermissionsData,
   QueryPayload,
+  QueryV3Payload,
   RecordDetails,
   Response,
   ResponseData,
@@ -48,6 +49,9 @@ export class FireberryClientSDK<
         getFields: this.getMetadataFields.bind(this),
         getField: this.getMetadataField.bind(this),
         getObjects: this.getMetadataObjects.bind(this),
+      },
+      v3: {
+        query: this.queryV3.bind(this),
       },
     };
   }
@@ -274,6 +278,14 @@ export class FireberryClientSDK<
     return (data as unknown as { navigation: NavigationData }).navigation;
   }
 
+  private queryV3(payload: QueryV3Payload): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      ...payload,
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.QUERY_V3,
+    });
+  }
+
   private query(objectType: ObjectType, payload: QueryPayload): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
       type: MESSAGE_TYPES.REQUEST,
@@ -446,12 +458,16 @@ export class FireberryClientSDK<
   }
 }
 
-export { FIELD_TYPES, OBJECTS } from './constants';
+export { AGGREGATIONS, FIELD_TYPES, OBJECTS, OPERATORS } from './constants';
 
 export type {
+  AggregatedField,
+  AggregationFunction,
   AppSubscriptionBillingCyclePlanValues,
   AppSubscriptionStatusValues,
+  ArrayOperator,
   BadgePayload,
+  BetweenOperator,
   BusinessObject,
   CallbarPayload,
   Data,
@@ -467,6 +483,7 @@ export type {
   MetadataAPI,
   NavigationData,
   NavigationType,
+  NoValueOperator,
   NumericObjectType,
   ObjectMeta,
   ObjectPermission,
@@ -477,13 +494,23 @@ export type {
   PermissionObjects,
   PermissionsData,
   PicklistOption,
+  PlainField,
   QueryPayload,
+  QueryV3Condition,
+  QueryV3ConditionGroup,
+  QueryV3ConditionOperator,
+  QueryV3Field,
+  QueryV3GroupBy,
+  QueryV3OrderBy,
+  QueryV3Payload,
+  QueryV3Response,
   ResponseData,
   ResponseError,
   SettingsAPI,
   StorageAPI,
   StorageRecordAPI,
   ToastPayload,
+  ValueOperator,
 } from './types';
 
 export { APP_SUBSCRIPTION_BILLING_CYCLE_PLAN, APP_SUBSCRIPTION_STATUS } from './constants';
