@@ -1,8 +1,10 @@
 import {
+  AGGREGATIONS,
   APP_SUBSCRIPTION_BILLING_CYCLE_PLAN,
   APP_SUBSCRIPTION_STATUS,
   FIELD_TYPES,
   MESSAGE_TYPES,
+  OPERATORS,
   REQUEST_ACTIONS,
 } from '../constants';
 import { Context } from '../context';
@@ -92,6 +94,103 @@ export type QueryPayload = {
   query: string;
   page_size?: number;
   page_number?: number;
+};
+
+export type AggregationFunction = (typeof AGGREGATIONS)[keyof typeof AGGREGATIONS];
+
+export type QueryV3ConditionOperator = (typeof OPERATORS)[keyof typeof OPERATORS];
+
+export type NoValueOperator = Extract<
+  QueryV3ConditionOperator,
+  'is-null' | 'is-not-null' | 'userid'
+>;
+export type ArrayOperator = Extract<QueryV3ConditionOperator, 'eq-in' | 'not-in'>;
+export type BetweenOperator = Extract<QueryV3ConditionOperator, 'between'>;
+export type ValueOperator = Extract<
+  QueryV3ConditionOperator,
+  'eq' | 'ne' | 'lt' | 'gt' | 'le' | 'ge' | 'start-with' | 'not-start-with'
+>;
+
+type QueryV3ValueCondition = {
+  fieldName: string;
+  operator: ValueOperator;
+  value: string | number | boolean;
+};
+
+type QueryV3ArrayCondition = {
+  fieldName: string;
+  operator: ArrayOperator;
+  value: (string | number)[];
+};
+
+type QueryV3BetweenCondition = {
+  fieldName: string;
+  operator: BetweenOperator;
+  value: [string | number, string | number];
+};
+
+type QueryV3NoValueCondition = {
+  fieldName: string;
+  operator: NoValueOperator;
+};
+
+export type QueryV3Condition =
+  | QueryV3ValueCondition
+  | QueryV3ArrayCondition
+  | QueryV3BetweenCondition
+  | QueryV3NoValueCondition;
+
+export type QueryV3ConditionGroup = {
+  type: 'AND' | 'OR';
+  conditions: QueryV3Condition[];
+};
+
+export type PlainField = {
+  name: string;
+};
+
+export type AggregatedField = {
+  name: string;
+  aggrFunc: AggregationFunction;
+  alias?: string;
+};
+
+export type QueryV3Field = PlainField | AggregatedField;
+
+export type QueryV3OrderBy = {
+  name: string;
+  order?: 'asc' | 'desc';
+};
+
+export type QueryV3GroupBy = {
+  name: string;
+};
+
+type QueryV3BasePayload = {
+  objectType: number;
+  filter?: QueryV3ConditionGroup[];
+  orderBy?: QueryV3OrderBy[];
+  pageSize?: number;
+  pageNumber?: number;
+};
+
+type SimpleQueryPayload = QueryV3BasePayload & {
+  fields: PlainField[];
+  groupBy?: never;
+};
+
+type AggregationQueryPayload = QueryV3BasePayload & {
+  fields: (PlainField | AggregatedField)[];
+  groupBy: QueryV3GroupBy[];
+};
+
+export type QueryV3Payload = SimpleQueryPayload | AggregationQueryPayload;
+
+export type QueryV3Response = {
+  data: Record<string, unknown>[];
+  pageNumber: number;
+  pageSize: number;
+  isLastPage: boolean;
 };
 
 export type BadgeType = 'success' | 'warning' | 'error' | 'info';
@@ -204,6 +303,9 @@ export interface API<TData extends Response> {
     payload: T
   ) => Promise<ResponseData<TData>>;
   metadata: MetadataAPI;
+  v3: {
+    query: (payload: QueryV3Payload) => Promise<ResponseData<TData>>;
+  };
 }
 
 export type FileMetadata = {

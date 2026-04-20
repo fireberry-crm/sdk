@@ -17,6 +17,7 @@ import type {
   Payload,
   PermissionsData,
   QueryPayload,
+  QueryV3Payload,
   RecordDetails,
   Response,
   ResponseData,
@@ -48,6 +49,9 @@ export class FireberryClientSDK<
         getFields: this.getMetadataFields.bind(this),
         getField: this.getMetadataField.bind(this),
         getObjects: this.getMetadataObjects.bind(this),
+      },
+      v3: {
+        query: this.queryV3.bind(this),
       },
     };
   }
@@ -169,9 +173,9 @@ export class FireberryClientSDK<
 
   private showBadge(payload: BadgePayload): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
+      ...payload,
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.SHOW_BADGE,
-      ...payload,
     });
   }
 
@@ -205,9 +209,9 @@ export class FireberryClientSDK<
 
   private showCallbar(payload: CallbarPayload): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
+      ...payload,
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.SHOW_CALLBAR,
-      ...payload,
     });
   }
 
@@ -220,9 +224,9 @@ export class FireberryClientSDK<
 
   private showToast(payload: ToastPayload): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
+      ...payload,
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.SHOW_TOAST,
-      ...payload,
     });
   }
 
@@ -274,12 +278,20 @@ export class FireberryClientSDK<
     return (data as unknown as { navigation: NavigationData }).navigation;
   }
 
+  private queryV3(payload: QueryV3Payload): Promise<ResponseData<TData>> {
+    return this.sendMessageWithPromise({
+      ...payload,
+      type: MESSAGE_TYPES.REQUEST,
+      action: REQUEST_ACTIONS.QUERY_V3,
+    });
+  }
+
   private query(objectType: ObjectType, payload: QueryPayload): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
+      ...payload,
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.QUERY,
       objecttype: objectType,
-      ...payload,
     });
   }
 
@@ -288,10 +300,10 @@ export class FireberryClientSDK<
     payload: T
   ): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
+      ...payload,
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.CREATE,
       objectType,
-      ...payload,
     });
   }
 
@@ -310,11 +322,11 @@ export class FireberryClientSDK<
     payload: T
   ): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
+      ...payload,
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.UPDATE,
       objectType,
       recordId,
-      ...payload,
     });
   }
 
@@ -356,18 +368,18 @@ export class FireberryClientSDK<
 
   private async getFiles(payload: PaginationPayload): Promise<GetFilesResponse> {
     const response = await this.sendMessageWithPromise({
+      ...payload,
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.GET_FILES,
-      ...payload,
     });
     return response.data as unknown as GetFilesResponse;
   }
 
   private async getRecordFiles(payload: PaginationPayload): Promise<GetFilesResponse> {
     const response = await this.sendMessageWithPromise({
+      ...payload,
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.GET_RECORD_FILES,
-      ...payload,
     });
     return response.data as unknown as GetFilesResponse;
   }
@@ -446,12 +458,18 @@ export class FireberryClientSDK<
   }
 }
 
-export { FIELD_TYPES, OBJECTS } from './constants';
+export { AGGREGATIONS, FIELD_TYPES, OBJECTS, OPERATORS } from './constants';
+
+export type { SideMenuData } from './types/events';
 
 export type {
+  AggregatedField,
+  AggregationFunction,
   AppSubscriptionBillingCyclePlanValues,
   AppSubscriptionStatusValues,
+  ArrayOperator,
   BadgePayload,
+  BetweenOperator,
   BusinessObject,
   CallbarPayload,
   Data,
@@ -467,6 +485,7 @@ export type {
   MetadataAPI,
   NavigationData,
   NavigationType,
+  NoValueOperator,
   NumericObjectType,
   ObjectMeta,
   ObjectPermission,
@@ -477,13 +496,23 @@ export type {
   PermissionObjects,
   PermissionsData,
   PicklistOption,
+  PlainField,
   QueryPayload,
+  QueryV3Condition,
+  QueryV3ConditionGroup,
+  QueryV3ConditionOperator,
+  QueryV3Field,
+  QueryV3GroupBy,
+  QueryV3OrderBy,
+  QueryV3Payload,
+  QueryV3Response,
   ResponseData,
   ResponseError,
   SettingsAPI,
   StorageAPI,
   StorageRecordAPI,
   ToastPayload,
+  ValueOperator,
 } from './types';
 
 export { APP_SUBSCRIPTION_BILLING_CYCLE_PLAN, APP_SUBSCRIPTION_STATUS } from './constants';
