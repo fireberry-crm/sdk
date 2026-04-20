@@ -82,7 +82,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          # Pinned to avoid the broken bundled npm in Node 22.22.2,
+          # which crashes on self-upgrade (`npm install -g npm@...`)
+          # because the install yanks `promise-retry` out from under the
+          # running npm process. Only the publish job self-upgrades npm,
+          # so only this job needs the pin. The build job is unaffected
+          # because `npm ci` doesn't touch the global npm install.
+          # See https://github.com/nodejs/node/issues/62430
+          # Bump back to a floating "22" once a patched 22.x is released.
+          node-version: 22.22.0
           registry-url: "https://registry.npmjs.org/"
 
       - name: Download build artifacts
