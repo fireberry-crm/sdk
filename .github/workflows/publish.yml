@@ -23,10 +23,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22
           registry-url: "https://registry.npmjs.org/"
@@ -50,12 +50,12 @@ jobs:
         run: npm run build
 
       - name: Generate build attestation
-        uses: actions/attest-build-provenance@v3
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: "dist/**/*"
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sdk-dist
           path: dist/
@@ -77,27 +77,31 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22
           registry-url: "https://registry.npmjs.org/"
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: sdk-dist
           path: .
 
       - name: Generate package attestation
-        uses: actions/attest-build-provenance@v3
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: "package.json"
 
+      # Pin to a specific npm version (not @latest) to avoid the broken
+      # self-upgrade path that drops `promise-retry` mid-install.
+      # See: https://github.com/nodejs/node/issues/62430
+      # 11.5.1+ is required for npm trusted publishing.
       - name: Update npm
-        run: npm install -g npm@latest
+        run: npm install -g npm@11.12.1
 
       - name: Publish to npm
         run: npm publish --provenance --access public
@@ -111,7 +115,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Create GitHub release
         run: |
