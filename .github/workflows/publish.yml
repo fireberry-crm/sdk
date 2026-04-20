@@ -3,14 +3,14 @@ name: Publish Fireberry SDK to npm
 on:
   workflow_dispatch:
 
-# Prevent concurrent releases
+    # Prevent concurrent releases
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   build:
-    name: Build & Lint SDK
+    name: Build, Lint & Pack SDK
     runs-on: ubuntu-22.04
     permissions:
       contents: read
@@ -20,6 +20,7 @@ jobs:
     outputs:
       version: ${{ steps.info.outputs.version }}
       name: ${{ steps.info.outputs.name }}
+      tarball: ${{ steps.pack.outputs.tarball }}
 
     steps:
       - name: Checkout repository
@@ -37,8 +38,7 @@ jobs:
         id: info
         run: |
           echo "name=$(node -p "require('./package.json').name")" >> $GITHUB_OUTPUT
-          NEW_VERSION=$(node -p "require('./package.json').version")
-          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
       - name: Install dependencies
         run: npm ci
@@ -49,18 +49,25 @@ jobs:
       - name: Build SDK
         run: npm run build
 
+      - name: Pack tarball
+        id: pack
+        run: |
+          tarball=$(npm pack --silent)
+          echo "tarball=$tarball" >> $GITHUB_OUTPUT
+          ls -lh "$tarball"
+
       - name: Generate build attestation
         uses: actions/attest-build-provenance@v4
         with:
-          subject-path: "dist/**/*"
+          subject-path: ${{ steps.pack.outputs.tarball }}
 
-      - name: Upload build artifacts
+      - name: Upload tarball
         uses: actions/upload-artifact@v7
         with:
-          name: sdk-dist
-          path: dist/
+          name: sdk-tarball
+          path: ${{ steps.pack.outputs.tarball }}
           retention-days: 1
-          compression-level: 6
+          compression-level: 0
 
   publish:
     name: Publish to npm
@@ -73,58 +80,44 @@ jobs:
 
     environment:
       name: npm
-      url: https://www.npmjs.com/package/${{ needs.build.outputs.name }}/v/${{ needs.build.outputs.version }}
+      url: https://www.npmjs.com/package/${{ needs.build.outputs.name }}/v/${{
+        needs.build.outputs.version }}
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          # Pinned to avoid the broken bundled npm in Node 22.22.2,
-          # which crashes on self-upgrade (`npm install -g npm@...`)
-          # because the install yanks `promise-retry` out from under the
-          # running npm process. Only the publish job self-upgrades npm,
-          # so only this job needs the pin. The build job is unaffected
-          # because `npm ci` doesn't touch the global npm install.
-          # See https://github.com/nodejs/node/issues/62430
-          # Bump back to a floating "22" once a patched 22.x is released.
+          # See: https://github.com/nodejs/node/issues/62430
           node-version: 22.22.0
           registry-url: "https://registry.npmjs.org/"
 
-      - name: Download build artifacts
+      - name: Download tarball
         uses: actions/download-artifact@v8
         with:
-          name: sdk-dist
+          name: sdk-tarball
           path: .
 
-      - name: Generate package attestation
+      - name: Attest tarball before publish
         uses: actions/attest-build-provenance@v4
         with:
-          subject-path: "package.json"
+          subject-path: ${{ needs.build.outputs.tarball }}
 
-      # Pin to a specific npm version (not @latest) to avoid the broken
-      # self-upgrade path that drops `promise-retry` mid-install.
       # See: https://github.com/nodejs/node/issues/62430
-      # 11.5.1+ is required for npm trusted publishing.
       - name: Update npm
         run: npm install -g npm@11.12.1
 
       - name: Publish to npm
-        run: npm publish --provenance --access public
+        run: npm publish "${{ needs.build.outputs.tarball }}" --provenance --access
+          public
 
   release:
     name: Create GitHub Release
-    needs: [build, publish]
+    needs: [ build, publish ]
     runs-on: ubuntu-22.04
     permissions:
       contents: write
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
       - name: Create GitHub release
         run: |
           gh release create "v${{ needs.build.outputs.version }}" --verify-tag \
