@@ -173,9 +173,9 @@ export class FireberryClientSDK<
 
   private showBadge(payload: BadgePayload): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
+      ...payload,
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.SHOW_BADGE,
-      ...payload,
     });
   }
 
@@ -209,9 +209,9 @@ export class FireberryClientSDK<
 
   private showCallbar(payload: CallbarPayload): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
+      ...payload,
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.SHOW_CALLBAR,
-      ...payload,
     });
   }
 
@@ -224,9 +224,9 @@ export class FireberryClientSDK<
 
   private showToast(payload: ToastPayload): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
+      ...payload,
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.SHOW_TOAST,
-      ...payload,
     });
   }
 
@@ -288,10 +288,10 @@ export class FireberryClientSDK<
 
   private query(objectType: ObjectType, payload: QueryPayload): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
+      ...payload,
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.QUERY,
       objecttype: objectType,
-      ...payload,
     });
   }
 
@@ -300,10 +300,10 @@ export class FireberryClientSDK<
     payload: T
   ): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
+      ...payload,
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.CREATE,
       objectType,
-      ...payload,
     });
   }
 
@@ -322,11 +322,11 @@ export class FireberryClientSDK<
     payload: T
   ): Promise<ResponseData<TData>> {
     return this.sendMessageWithPromise({
+      ...payload,
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.UPDATE,
       objectType,
       recordId,
-      ...payload,
     });
   }
 
@@ -368,18 +368,18 @@ export class FireberryClientSDK<
 
   private async getFiles(payload: PaginationPayload): Promise<GetFilesResponse> {
     const response = await this.sendMessageWithPromise({
+      ...payload,
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.GET_FILES,
-      ...payload,
     });
     return response.data as unknown as GetFilesResponse;
   }
 
   private async getRecordFiles(payload: PaginationPayload): Promise<GetFilesResponse> {
     const response = await this.sendMessageWithPromise({
+      ...payload,
       type: MESSAGE_TYPES.REQUEST,
       action: REQUEST_ACTIONS.GET_RECORD_FILES,
-      ...payload,
     });
     return response.data as unknown as GetFilesResponse;
   }
