@@ -227,6 +227,7 @@ type FieldMetaBase = {
   name: string;
   label: string;
   readonly: boolean;
+  required: boolean;
 };
 
 type LookUpFieldMeta = FieldMetaBase & {
