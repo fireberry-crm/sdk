@@ -104,7 +104,6 @@ export class IframeMessageManager<TData extends Response> {
           type,
           payload,
         });
-        throw new Error(`Unknown response type: ${type}`);
     }
   }
 
